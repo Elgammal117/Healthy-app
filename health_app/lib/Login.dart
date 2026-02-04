@@ -1,17 +1,19 @@
 import 'dart:ui';
+import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
+
 import 'Forget_Password.dart';
 import 'package:flutter/material.dart';
 import 'Home.dart';
 import 'Signup.dart';
 
-class Home_Page extends StatefulWidget {
-  const Home_Page({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<Home_Page> createState() => _Home_PageState();
+  State<Login> createState() => _Home_PageState();
 }
 
-class _Home_PageState extends State<Home_Page> {
+class _Home_PageState extends State<Login> {
   bool isPasswordNotVisible = true;
   String? email;
   String? password;
@@ -207,30 +209,8 @@ class _Home_PageState extends State<Home_Page> {
                   ),
                 ),
 
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color(0xff37EC13),
-                  ),
-                  width: 317,
-                  height: 65,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                Button("login", HomePage()),
+
                 SizedBox(height: 80),
                 Row(
                   children: [
