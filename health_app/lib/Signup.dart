@@ -234,9 +234,9 @@ class _SignupPageState extends State<SignupPage> {
 
                       children: [
                         SizedBox(
-                          child: Image.asset("assets/Google.png"),
                           height: 20,
                           width: 20,
+                          child: Image.asset("assets/Google.png"),
                         ),
                         SizedBox(width: 10),
                         Text(
@@ -270,9 +270,9 @@ class _SignupPageState extends State<SignupPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          child: Image.asset("assets/Facebook.png"),
                           height: 20,
                           width: 20,
+                          child: Image.asset("assets/Facebook.png"),
                         ),
                         SizedBox(width: 10),
                         Text(

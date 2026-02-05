@@ -37,9 +37,9 @@ class _Home_PageState extends State<Login> {
               children: [
                 SizedBox(height: 30),
                 SizedBox(
-                  child: Image.asset("assets/Logo.png"),
                   height: 70,
                   width: 70,
+                  child: Image.asset("assets/Logo.png"),
                 ),
                 SizedBox(height: 10),
                 Center(
@@ -249,9 +249,9 @@ class _Home_PageState extends State<Login> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                child: Image.asset("assets/Google.png"),
                                 height: 20,
                                 width: 20,
+                                child: Image.asset("assets/Google.png"),
                               ),
                               SizedBox(width: 10),
                               Text(
@@ -284,9 +284,9 @@ class _Home_PageState extends State<Login> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                child: Image.asset("assets/Facebook.png"),
                                 height: 20,
                                 width: 20,
+                                child: Image.asset("assets/Facebook.png"),
                               ),
                               SizedBox(width: 10),
                               Text(

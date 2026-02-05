@@ -7,11 +7,11 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Color(0xff37EC13),
       ),
-      width: 317,
       height: 65,
       child: TextButton(
         onPressed: () {
