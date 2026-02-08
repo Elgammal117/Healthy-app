@@ -7,6 +7,7 @@ import 'package:health_app/Gender.dart';
 import 'package:health_app/Goal_Weight.dart';
 import 'package:health_app/Height.dart';
 import 'package:health_app/Login.dart';
+import 'package:health_app/Plan.dart';
 
 class Data extends StatefulWidget {
   const Data({super.key});
@@ -71,6 +72,7 @@ class _DataState extends State<Data> {
                 CurrentWeight(),
                 GoalWeight(),
                 Activity(),
+                Plan(),
               ],
             ),
           ),

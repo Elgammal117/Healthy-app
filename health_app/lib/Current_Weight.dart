@@ -15,14 +15,14 @@ class _CurrentWeightState extends State<CurrentWeight> {
 
   double itemWidth = 15;
 
-  int currentWeight = 70; // kg, default
+  int currentweight = 65; // kg, default
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToWeight(currentWeight);
+      _scrollToWeight(currentweight);
     });
 
     _controller.addListener(_onScroll);
@@ -44,9 +44,9 @@ class _CurrentWeightState extends State<CurrentWeight> {
     int index = (centerOffset / itemWidth).round();
     int weight = (minWeight + index).clamp(minWeight, maxWeight);
 
-    if (weight != currentWeight) {
+    if (weight != currentweight) {
       setState(() {
-        currentWeight = weight;
+        currentweight = weight;
       });
     }
   }
@@ -64,15 +64,17 @@ class _CurrentWeightState extends State<CurrentWeight> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 20),
             Text(
-              "What is your current weight?",
+              "What is your weight?",
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 150),
             Text(
-              "Your weight",
+              "Your Current weight",
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -86,7 +88,7 @@ class _CurrentWeightState extends State<CurrentWeight> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "$currentWeight",
+                    "$currentweight",
                     style: const TextStyle(
                       fontSize: 120,
                       fontWeight: FontWeight.bold,
@@ -142,7 +144,7 @@ class _CurrentWeightState extends State<CurrentWeight> {
             Spacer(),
             Text(
               textAlign: TextAlign.center,
-              "Your weight helps us calculate your daily calorie and macro needs more accurately.",
+              "We use your weight to calculate your daily macro and calorie needs accurately.",
               style: TextStyle(color: Color(0xff6B7280), fontSize: 12),
             ),
             SizedBox(height: 20),
