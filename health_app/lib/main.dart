@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:health_app/The%20App/App.dart';
 import 'package:health_app/profile/Data.dart';
-import 'package:health_app/Home.dart';
+import 'package:health_app/The%20App/Home.dart';
 import 'package:health_app/auth/Login.dart';
 import 'package:flutter/services.dart';
 
@@ -22,6 +23,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: Login());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: App());
   }
 }
