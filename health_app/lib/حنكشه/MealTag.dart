@@ -3,17 +3,22 @@ import 'package:flutter/material.dart';
 class MealCard extends StatefulWidget {
   final String title;
   final int calories;
-  final int time;
-  final List<MealTag> tags;
   final String imageUrl;
   final bool isFavorite;
+  final int protein;
+  final int carbs;
+  final int fat;
+  final int cookTime;
 
   const MealCard({
     super.key,
+    required this.protein,
+    required this.carbs,
+    required this.fat,
+
     required this.title,
     required this.calories,
-    required this.time,
-    required this.tags,
+    required this.cookTime,
     required this.imageUrl,
     this.isFavorite = false,
   });
@@ -58,7 +63,7 @@ class _MealCardState extends State<MealCard> {
               borderRadius: BorderRadius.circular(12),
               color: const Color(0xFF2A2A2A),
               image: DecorationImage(
-                image: AssetImage(widget.imageUrl),
+                image: NetworkImage(widget.imageUrl),
                 fit: BoxFit.cover,
                 onError: (exception, stackTrace) {},
               ),
@@ -109,7 +114,17 @@ class _MealCardState extends State<MealCard> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Wrap(spacing: 6, runSpacing: 4, children: widget.tags),
+
+                  // Macros
+                  Row(
+                    children: [
+                      _buildMacro('${widget.calories} kcal'),
+                      _buildMacro('${widget.protein}g P'),
+                      _buildMacro('${widget.carbs}g C'),
+                      _buildMacro('${widget.fat}g F'),
+                    ],
+                  ),
+
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -129,7 +144,7 @@ class _MealCardState extends State<MealCard> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${widget.time} min',
+                        '${widget.cookTime} min',
                         style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                       ),
                       const SizedBox(width: 8),
@@ -169,4 +184,11 @@ class MealTag extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildMacro(String text) {
+  return Padding(
+    padding: const EdgeInsets.only(right: 8),
+    child: Text(text, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+  );
 }
