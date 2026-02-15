@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/FoodCard.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/MealTag.dart';
+import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/filter_bottom_sheet.dart';
 import 'package:health_app/The%20App/Favorite.dart';
 
 class FilteredResultsScreen extends StatefulWidget {
@@ -31,12 +32,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -67,11 +62,30 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           color: Colors.grey[400],
                           size: 20,
                         ),
-                        suffixIcon: Icon(
-                          Icons.tune,
-                          color: Colors.grey[600],
-                          size: 20,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height *
+                                      0.75, // 75% of screen
+
+                                  child: FilterBottomSheet(),
+                                );
+                              },
+                            );
+                          },
+                          icon: Icon(
+                            Icons.tune,
+                            color: Colors.grey[600],
+                            size: 20,
+                          ),
                         ),
+
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,

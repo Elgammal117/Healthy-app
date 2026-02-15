@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:health_app/The%20App/Food_ingredients.dart';
 import 'package:provider/provider.dart';
 
 import 'package:health_app/The App/App.dart';
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(debugShowCheckedModeBanner: false, home: App());
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: RecipeScreen(),
+    );
   }
 }
