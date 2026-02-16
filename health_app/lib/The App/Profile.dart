@@ -123,6 +123,8 @@ class Profile extends StatelessWidget {
                         const Text(
                           "NUTRITION GOALS",
                           style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
                             color: Colors.grey,
                             letterSpacing: 1,
                           ),
@@ -130,13 +132,20 @@ class Profile extends StatelessWidget {
 
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
+                            backgroundColor: Color(0xff37EC13),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
                           onPressed: () {},
-                          child: const Text("RECALCULATE"),
+                          child: const Text(
+                            "RECALCULATE",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -153,7 +162,10 @@ class Profile extends StatelessWidget {
 
                     const Text(
                       "DAILY CALORIE TARGET",
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
 
                     const SizedBox(height: 20),
@@ -189,7 +201,7 @@ class Profile extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Colors.green, Color(0xFF00E676)],
+                    colors: [Colors.green, Color(0xff37EC13)],
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -249,14 +261,14 @@ class Profile extends StatelessWidget {
               _MenuTile(
                 icon: Icons.settings,
                 title: "Settings",
-                color: Colors.blueGrey,
+                color: Color(0xff64748B),
               ),
               SizedBox(height: 12),
 
               _MenuTile(
                 icon: Icons.info,
                 title: "About the App",
-                color: Colors.blueGrey,
+                color: Color(0xff64748B),
               ),
               SizedBox(height: 12),
 
@@ -308,7 +320,7 @@ class _StatBox extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.green,
+                color: Colors.black,
               ),
             ),
             const SizedBox(height: 4),
