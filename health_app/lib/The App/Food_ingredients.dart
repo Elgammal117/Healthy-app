@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/Button.dart';
 import 'package:health_app/The%20App/Steps.dart';
 
-class RecipeScreen extends StatefulWidget {
-  const RecipeScreen({Key? key}) : super(key: key);
+class Food_Ingredients extends StatefulWidget {
+  const Food_Ingredients({Key? key}) : super(key: key);
 
   @override
-  State<RecipeScreen> createState() => _RecipeScreenState();
+  State<Food_Ingredients> createState() => _RecipeScreenState();
 }
 
-class _RecipeScreenState extends State<RecipeScreen> {
+class _RecipeScreenState extends State<Food_Ingredients> {
   final List<bool> _selectedIngredients = [false, false, false, false, false];
 
   @override

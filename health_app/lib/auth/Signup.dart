@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
 import 'package:health_app/auth/Login.dart';
+import 'package:health_app/profile/Gender.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -201,7 +202,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               SizedBox(height: 30),
 
-              Button("Create Account", SignupPage()),
+              Button("Create Account", Gender()),
               SizedBox(height: 20),
               Align(
                 alignment: Alignment.center,

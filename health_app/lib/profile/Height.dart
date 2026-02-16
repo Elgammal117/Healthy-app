@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:health_app/profile/Current_Weight.dart';
+
+import '../حنكشه/Button.dart';
 
 class Height extends StatefulWidget {
   const Height({super.key});
@@ -147,6 +150,7 @@ class _HeightState extends State<Height> {
               style: TextStyle(color: Color(0xff6B7280), fontSize: 12),
             ),
             SizedBox(height: 20),
+            Button("Continue", CurrentWeight()),
           ],
         ),
       ),

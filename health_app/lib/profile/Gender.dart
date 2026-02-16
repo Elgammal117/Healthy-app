@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
+import 'package:health_app/profile/Age.dart';
 
 class Gender extends StatefulWidget {
   const Gender({super.key});
@@ -157,6 +159,7 @@ class _GenderState extends State<Gender> {
               style: TextStyle(color: Color(0xff6B7280), fontSize: 12),
             ),
             SizedBox(height: 20),
+            Button("Continue", Age()),
           ],
         ),
       ),

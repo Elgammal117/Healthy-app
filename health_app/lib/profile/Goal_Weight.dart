@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:health_app/profile/Activity.dart';
+
+import '../حنكشه/Button.dart';
 
 class GoalWeight extends StatefulWidget {
   const GoalWeight({super.key});
@@ -31,9 +34,8 @@ class _GoalWeightState extends State<GoalWeight> {
   void _scrollToWeight(int weight) {
     if (!_controller.hasClients) return;
     final viewportWidth = _controller.position.viewportDimension;
-    double offset = (weight - minWeight) * itemWidth -
-        viewportWidth / 2 +
-        itemWidth / 2;
+    double offset =
+        (weight - minWeight) * itemWidth - viewportWidth / 2 + itemWidth / 2;
     offset = offset.clamp(0.0, _controller.position.maxScrollExtent);
     _controller.jumpTo(offset);
   }
@@ -147,6 +149,7 @@ class _GoalWeightState extends State<GoalWeight> {
               style: TextStyle(color: Color(0xff6B7280), fontSize: 12),
             ),
             SizedBox(height: 20),
+            Button("Continue", Activity()),
           ],
         ),
       ),

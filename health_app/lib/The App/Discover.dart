@@ -382,23 +382,3 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 }
 
 // Example usage in main.dart:
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Filtered Results',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        scaffoldBackgroundColor: Colors.grey[100],
-      ),
-      home: const FilteredResultsScreen(),
-    );
-  }
-}

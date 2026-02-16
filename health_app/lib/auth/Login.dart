@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
+import 'package:health_app/The%20App/App.dart';
 
 import 'Forget_Password.dart';
 import 'package:flutter/material.dart';
@@ -209,7 +210,7 @@ class _Home_PageState extends State<Login> {
                   ),
                 ),
 
-                Button("login", HomePage()),
+                Button("login", App()),
 
                 SizedBox(height: 80),
                 Row(

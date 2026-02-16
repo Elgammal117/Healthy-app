@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:health_app/profile/Plan.dart';
+
+import '../حنكشه/Button.dart';
 
 class Activity extends StatefulWidget {
   const Activity({super.key});
@@ -319,6 +322,8 @@ class _ActivityState extends State<Activity> {
                 "This helps us calculate your daily calorie and macro goals with high precision.",
                 style: TextStyle(color: Color(0xff6B7280), fontSize: 16),
               ),
+              SizedBox(height: 20),
+              Button("Continue", Plan()),
             ],
           ),
         ),
