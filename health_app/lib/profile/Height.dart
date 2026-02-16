@@ -150,7 +150,6 @@ class _HeightState extends State<Height> {
               style: TextStyle(color: Color(0xff6B7280), fontSize: 12),
             ),
             SizedBox(height: 20),
-            Button("Continue", CurrentWeight()),
           ],
         ),
       ),

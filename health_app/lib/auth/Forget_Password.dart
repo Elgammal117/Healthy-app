@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
 import 'package:health_app/auth/Login.dart';
 
+// ignore: must_be_immutable
 class ForgetPassword extends StatelessWidget {
   ForgetPassword({super.key});
   String? email;

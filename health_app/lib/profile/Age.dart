@@ -140,7 +140,6 @@ class _AgeState extends State<Age> {
                 style: TextStyle(color: Color(0xff6B7280), fontSize: 12),
               ),
               SizedBox(height: 20),
-              Button("Continue", Height()),
             ],
           ),
         ),

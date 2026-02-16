@@ -159,7 +159,6 @@ class _GenderState extends State<Gender> {
               style: TextStyle(color: Color(0xff6B7280), fontSize: 12),
             ),
             SizedBox(height: 20),
-            Button("Continue", Age()),
           ],
         ),
       ),

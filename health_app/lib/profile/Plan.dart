@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:health_app/The%20App/App.dart';
+
+import '../حنكشه/Button.dart';
 
 class PageIndicator extends StatelessWidget {
   final int currentIndex;
@@ -451,9 +454,10 @@ class _PlanState extends State<Plan> {
               Spacer(),
               Text(
                 textAlign: TextAlign.center,
-                "This helps us calculate your daily calorie and macro goals with high precision.",
+                "Choose the intensity that fits your lifestyle. You can adjust this anytime in your profile settings.",
                 style: TextStyle(color: Color(0xff6B7280), fontSize: 16),
               ),
+              SizedBox(height: 20),
             ],
           ),
         ),

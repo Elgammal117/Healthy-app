@@ -323,7 +323,6 @@ class _ActivityState extends State<Activity> {
                 style: TextStyle(color: Color(0xff6B7280), fontSize: 16),
               ),
               SizedBox(height: 20),
-              Button("Continue", Plan()),
             ],
           ),
         ),

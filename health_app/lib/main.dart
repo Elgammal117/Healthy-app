@@ -6,6 +6,7 @@ import 'package:health_app/The%20App/Food_ingredients.dart';
 import 'package:health_app/The%20App/Meal_Complete.dart';
 import 'package:health_app/The%20App/Steps.dart';
 import 'package:health_app/auth/Login.dart';
+import 'package:health_app/profile/Plan.dart';
 import 'package:provider/provider.dart';
 
 import 'package:health_app/The App/App.dart';

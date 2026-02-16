@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
+import 'package:health_app/The%20App/App.dart';
 import 'package:health_app/profile/Activity.dart';
 import 'package:health_app/profile/Age.dart';
 import 'package:health_app/profile/Current_Weight.dart';
@@ -20,15 +21,22 @@ class _DataState extends State<Data> {
   final PageController _controller = PageController();
   int currentPage = 0;
   void _nextStep() {
-    if (currentPage < 7) {
+    if (currentPage < 6) {
+      // Still inside PageView
       setState(() {
         currentPage++;
       });
 
       _controller.animateToPage(
         currentPage,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
+      );
+    } else {
+      // Last page → Go to Home
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const App()),
       );
     }
   }
