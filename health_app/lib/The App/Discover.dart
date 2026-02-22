@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/FoodCard.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/MealTag.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/filter_bottom_sheet.dart';
-import 'package:health_app/The%20App/Favorite.dart';
 
 class FilteredResultsScreen extends StatefulWidget {
   const FilteredResultsScreen({Key? key}) : super(key: key);

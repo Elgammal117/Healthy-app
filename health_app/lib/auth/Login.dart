@@ -4,7 +4,6 @@ import 'package:health_app/The%20App/App.dart';
 
 import 'Forget_Password.dart';
 import 'package:flutter/material.dart';
-import '../The App/Home.dart';
 import 'Signup.dart';
 
 class Login extends StatefulWidget {
@@ -36,11 +35,10 @@ class _Home_PageState extends State<Login> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ListView(
               children: [
-                SizedBox(height: 30),
                 SizedBox(
-                  height: 70,
-                  width: 70,
-                  child: Image.asset("assets/Logo.png"),
+                  height: 100,
+                  width: 100,
+                  child: Image.asset("assets/Logooo.png"),
                 ),
                 SizedBox(height: 10),
                 Center(

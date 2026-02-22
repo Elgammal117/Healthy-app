@@ -1,9 +1,6 @@
-import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/MealTag.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/macroBar.dart';
-import 'package:health_app/The%20App/Discover.dart';
-import 'package:health_app/auth/Login.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HomePage extends StatefulWidget {

@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:health_app/The%20App/App.dart';
-
-import '../حنكشه/Button.dart';
 
 class PageIndicator extends StatelessWidget {
   final int currentIndex;

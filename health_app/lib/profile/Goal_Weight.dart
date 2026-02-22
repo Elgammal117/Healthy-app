@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:health_app/profile/Activity.dart';
-
-import '../حنكشه/Button.dart';
 
 class GoalWeight extends StatefulWidget {
   const GoalWeight({super.key});
