@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:health_app/auth/Login.dart';
+import 'package:health_app/auth/Signup.dart';
+import 'package:health_app/auth/Verification.dart';
 import 'package:provider/provider.dart';
 import 'package:health_app/حنكشه/favorites_manager.dart';
 
@@ -29,6 +31,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(debugShowCheckedModeBanner: false, home: Login());
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SignupPage(),
+    );
   }
 }

@@ -64,7 +64,10 @@ class Data {
 
 @JsonSerializable(explicitToJson: true)
 class Image {
+  @JsonKey(name: 'secure_url')
   String? secureUrl;
+
+  @JsonKey(name: 'public_id')
   String? publicId;
 
   Image({this.secureUrl, this.publicId});

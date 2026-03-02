@@ -55,6 +55,24 @@ class RecipeCard extends StatelessWidget {
                   height: 120,
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    print('Image Error for $imageUrl: $error'); // Debug log
+                    return Container(
+                      height: 120,
+                      color: Colors.grey[300],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.broken_image, color: Colors.grey),
+                          const SizedBox(height: 4),
+                          Text(
+                            'URL: $imageUrl',
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
 

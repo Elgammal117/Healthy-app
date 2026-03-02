@@ -77,13 +77,13 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
 };
 
 Image _$ImageFromJson(Map<String, dynamic> json) => Image(
-  secureUrl: json['secureUrl'] as String?,
-  publicId: json['publicId'] as String?,
+  secureUrl: json['secure_url'] as String?,
+  publicId: json['public_id'] as String?,
 );
 
 Map<String, dynamic> _$ImageToJson(Image instance) => <String, dynamic>{
-  'secureUrl': instance.secureUrl,
-  'publicId': instance.publicId,
+  'secure_url': instance.secureUrl,
+  'public_id': instance.publicId,
 };
 
 Macros _$MacrosFromJson(Map<String, dynamic> json) => Macros(

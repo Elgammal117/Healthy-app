@@ -1,6 +1,10 @@
 import 'dart:ui';
+import 'package:dio/dio.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
 import 'package:health_app/The%20App/App.dart';
+import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/my_repo.dart';
+import 'package:health_app/network/web_services.dart';
 
 import 'Forget_Password.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +19,7 @@ class Login extends StatefulWidget {
 
 class _Home_PageState extends State<Login> {
   bool isPasswordNotVisible = true;
+  bool isLoading = false;
   String? email;
   String? password;
   @override
@@ -208,7 +213,92 @@ class _Home_PageState extends State<Login> {
                   ),
                 ),
 
-                Button("login", App()),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Color(0xff37EC13),
+                  ),
+                  height: 65,
+                  child: TextButton(
+                    onPressed: isLoading
+                        ? null
+                        : () async {
+                            if (email == null ||
+                                email!.isEmpty ||
+                                password == null ||
+                                password!.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Please enter email and password',
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            setState(() => isLoading = true);
+
+                            try {
+                              final request = LoginRequest(
+                                email: email,
+                                password: password,
+                              );
+                              final myRepo = MyRepo(WebServices(Dio()));
+
+                              final response = await myRepo.login(request);
+
+                              if (response.success == true) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => App(),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      response.message ?? 'Login failed',
+                                    ),
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('Error occurred during login'),
+                                ),
+                              );
+                            } finally {
+                              if (mounted) {
+                                setState(() => isLoading = false);
+                              }
+                            }
+                          },
+                    child: isLoading
+                        ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          )
+                        : Text(
+                            "Log In",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ),
+                ),
 
                 SizedBox(height: 80),
                 Row(

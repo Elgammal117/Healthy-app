@@ -1,6 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/FoodCard.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/filter_bottom_sheet.dart';
+import 'package:health_app/network/my_repo.dart';
+import 'package:health_app/network/recipes_try.dart';
+import 'package:health_app/network/web_services.dart';
 
 class FilteredResultsScreen extends StatefulWidget {
   const FilteredResultsScreen({Key? key}) : super(key: key);
@@ -13,6 +18,14 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   List<String> activeFilters = ['Under 500 kcal', 'High Protein'];
   String sortBy = 'Calories Low to High';
   int mealCount = 128;
+
+  late Future<Recipes> recipesFuture;
+  final myRepo = MyRepo(WebServices(Dio()));
+  @override
+  void initState() {
+    super.initState();
+    recipesFuture = myRepo.getAllRecipes();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,138 +169,51 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                 ],
               ),
             ),
-            Expanded(
-              child: ListView(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            FutureBuilder<Recipes>(
+              future: recipesFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
 
-                    children: [
-                      RecipeCard(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1467003909585-2f8a72700288',
-                        title: 'Zesty Lemon Garlic Salmon',
-                        calories: 420,
-                        protein: 35,
-                        carbs: 10,
-                        fat: 2,
-                        cookTime: 15,
-                      ),
-                      RecipeCard(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1467003909585-2f8a72700288',
-                        title: 'eggs',
-                        calories: 420,
-                        protein: 35,
-                        carbs: 10,
-                        fat: 2,
-                        cookTime: 15,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                // Update mealCount with results from API
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (snapshot.data?.results != null &&
+                      snapshot.data!.results != mealCount) {
+                    setState(() {
+                      mealCount = snapshot.data!.results!;
+                    });
+                  }
+                });
 
-                    children: [
-                      RecipeCard(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1467003909585-2f8a72700288',
-                        title: 'chicken',
-                        calories: 420,
-                        protein: 35,
-                        carbs: 10,
-                        fat: 2,
-                        cookTime: 15,
-                      ),
-                      RecipeCard(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1467003909585-2f8a72700288',
-                        title: 'Beef',
-                        calories: 420,
-                        protein: 35,
-                        carbs: 10,
-                        fat: 2,
-                        cookTime: 15,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                final recipes = snapshot.data?.data ?? [];
+                if (recipes.isEmpty) {
+                  return const Center(child: Text('No recipes found.'));
+                }
 
-                    children: [
-                      RecipeCard(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1467003909585-2f8a72700288',
-                        title: 'Lemon',
-                        calories: 420,
-                        protein: 35,
-                        carbs: 10,
-                        fat: 2,
-                        cookTime: 15,
-                      ),
-                      RecipeCard(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1467003909585-2f8a72700288',
-                        title: 'tomato',
-                        calories: 420,
-                        protein: 35,
-                        carbs: 10,
-                        fat: 2,
-                        cookTime: 15,
-                      ),
-                    ],
+                return Expanded(
+                  child: MasonryGridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 16,
+                    itemCount: recipes.length,
+                    itemBuilder: (context, index) {
+                      final recipe = recipes[index];
+                      return RecipeCard(
+                        imageUrl: recipe.image?.secureUrl ?? '',
+                        title: recipe.name ?? 'No name',
+                        calories: recipe.calories ?? 0,
+                        protein: recipe.macros?.protein ?? 0,
+                        carbs: recipe.macros?.carbohydrates ?? 0,
+                        fat: recipe.macros?.fats ?? 0,
+                        cookTime: recipe.cookingTime ?? 0,
+                      );
+                    },
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-
-                    children: [
-                      RecipeCard(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1467003909585-2f8a72700288',
-                        title: 'Rice',
-                        calories: 420,
-                        protein: 35,
-                        carbs: 10,
-                        fat: 2,
-                        cookTime: 15,
-                      ),
-                      RecipeCard(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1467003909585-2f8a72700288',
-                        title: 'Meat',
-                        calories: 420,
-                        protein: 35,
-                        carbs: 10,
-                        fat: 2,
-                        cookTime: 15,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-            // Expanded(
-            //           child: MasonryGridView.count(
-            //             crossAxisCount: 2, // same as your previous grid
-            //             mainAxisSpacing: 16,
-            //             itemCount: API.length,
-            //             itemBuilder: (context, index) {
-            //               final food = API[index];
-
-            //               return RecipeCard(
-            //                 imageUrl: food["image"]!,
-            //                 title: food["name"]!,
-            //                 calories: int.parse(food["calories"]!),
-            //                 protein: int.parse(food["protein"]!),
-            //                 carbs: int.parse(food["carbs"]!),
-            //                 fat: int.parse(food["fat"]!),
-            //                 cookTime: int.parse(food["cookTime"]!),
-            //               );
-            //             },
-            //           ),
-            //         ),
-
-            // Empty Results Area (since the screenshot shows empty space)
           ],
         ),
       ),

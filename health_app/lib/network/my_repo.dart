@@ -1,3 +1,4 @@
+import 'package:health_app/network/auth.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:health_app/network/web_services.dart';
 
@@ -7,6 +8,16 @@ class MyRepo {
 
   Future<Recipes> getAllRecipes() async {
     var respons = await webServices.getAllRecipes();
+    return respons;
+  }
+
+  Future<LoginRespons> login(LoginRequest request) async {
+    var respons = await webServices.login(request);
+    return respons;
+  }
+
+  Future<SignUpRespons> signUp(SignUpRequest request) async {
+    var respons = await webServices.signUp(request);
     return respons;
   }
 }

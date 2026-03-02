@@ -1,6 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
 import 'package:health_app/auth/Login.dart';
+import 'package:health_app/auth/Verification.dart';
+import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/my_repo.dart';
+import 'package:health_app/network/web_services.dart';
 import 'package:health_app/profile/Data.dart';
 
 class SignupPage extends StatefulWidget {
@@ -13,6 +18,9 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   bool isPasswordNotVisible1 = true;
   bool isPasswordNotVisible2 = true;
+  bool isLoading = false;
+  String? userName;
+  String? phone;
   String? email;
   String? password;
   String? confirmPassword;
@@ -47,9 +55,9 @@ class _SignupPageState extends State<SignupPage> {
                 strutStyle: StrutStyle(height: 1.5),
 
                 onChanged: (value) {
-                  email = value;
+                  userName = value;
                 },
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.name,
 
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
@@ -64,6 +72,41 @@ class _SignupPageState extends State<SignupPage> {
                   prefixIcon: Icon(color: Color(0xff9CA3AF), Icons.person_2),
                   hintStyle: TextStyle(color: Color(0xff9CA3AF)),
                   hintText: 'Mohammed Elgammal',
+                ),
+              ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Phone Number',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              TextField(
+                strutStyle: StrutStyle(height: 1.5),
+
+                onChanged: (value) {
+                  phone = value;
+                },
+                keyboardType: TextInputType.phone,
+
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xff9CA3AF)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xff37EC13)),
+                  ),
+
+                  prefixIcon: Icon(color: Color(0xff9CA3AF), Icons.phone),
+                  hintStyle: TextStyle(color: Color(0xff9CA3AF)),
+                  hintText: '01123456789',
                 ),
               ),
               SizedBox(height: 20),
@@ -151,58 +194,125 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Conform password',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              TextField(
-                strutStyle: StrutStyle(height: 1.5),
 
-                obscureText: isPasswordNotVisible2,
-                onChanged: (value) {
-                  confirmPassword = value;
-                },
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color(0xff9CA3AF)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color(0xff37EC13)),
-                  ),
-                  prefixIcon: Icon(color: Color(0xff9CA3AF), Icons.lock),
-                  hintStyle: TextStyle(color: Color(0xff9CA3AF)),
-                  hintText: 'Min. 8 characters',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      color: Color(0xff9CA3AF),
-
-                      isPasswordNotVisible2
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isPasswordNotVisible2 = !isPasswordNotVisible2;
-                      });
-                    },
-
-                    color: Color(0xff626262),
-                  ),
-                ),
-              ),
               SizedBox(height: 30),
 
-              Button("Create Account", Data()),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color(0xff37EC13),
+                ),
+                height: 65,
+                child: TextButton(
+                  onPressed: isLoading
+                      ? null
+                      : () async {
+                          // Validate all fields
+                          if (userName == null || userName!.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please enter your full name'),
+                              ),
+                            );
+                            return;
+                          }
+                          if (phone == null || phone!.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please enter your phone number'),
+                              ),
+                            );
+                            return;
+                          }
+                          if (email == null || email!.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please enter your email'),
+                              ),
+                            );
+                            return;
+                          }
+                          if (password == null || password!.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please enter your password'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          setState(() => isLoading = true);
+
+                          try {
+                            final request = SignUpRequest(
+                              userName: userName,
+                              email: email,
+                              password: password,
+                              phone: phone,
+                            );
+                            final myRepo = MyRepo(WebServices(Dio()));
+                            final response = await myRepo.signUp(request);
+
+                            if (response.success == true) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.green,
+                                  content: Text('Account created successfully'),
+                                ),
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Verification(
+                                    email: response.email ?? email ?? '',
+                                  ),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(
+                                    response.message ?? 'Signup failed',
+                                  ),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('Error: $e'),
+                              ),
+                            );
+                          } finally {
+                            if (mounted) {
+                              setState(() => isLoading = false);
+                            }
+                          }
+                        },
+                  child: isLoading
+                      ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                      : Text(
+                          "Create Account",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                ),
+              ),
               SizedBox(height: 20),
               Align(
                 alignment: Alignment.center,
