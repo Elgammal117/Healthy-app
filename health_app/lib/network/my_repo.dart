@@ -20,4 +20,9 @@ class MyRepo {
     var respons = await webServices.signUp(request);
     return respons;
   }
+
+  Future<OtpRespons> confirmEmail(OtpRequest request) async {
+    var respons = await webServices.confirmEmail(request);
+    return respons;
+  }
 }

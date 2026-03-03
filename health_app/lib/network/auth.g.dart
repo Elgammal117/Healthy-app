@@ -74,3 +74,17 @@ Map<String, dynamic> _$SignUpResponsToJson(SignUpRespons instance) =>
       'userId': instance.userId,
       'email': instance.email,
     };
+
+OtpRequest _$OtpRequestFromJson(Map<String, dynamic> json) =>
+    OtpRequest(email: json['email'] as String?, otp: json['otp'] as String?);
+
+Map<String, dynamic> _$OtpRequestToJson(OtpRequest instance) =>
+    <String, dynamic>{'email': instance.email, 'otp': instance.otp};
+
+OtpRespons _$OtpResponsFromJson(Map<String, dynamic> json) => OtpRespons(
+  success: json['success'] as bool?,
+  message: json['message'] as String?,
+);
+
+Map<String, dynamic> _$OtpResponsToJson(OtpRespons instance) =>
+    <String, dynamic>{'success': instance.success, 'message': instance.message};

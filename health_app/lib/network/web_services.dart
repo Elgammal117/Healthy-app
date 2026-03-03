@@ -16,4 +16,7 @@ abstract class WebServices {
 
   @POST('auth/signup')
   Future<SignUpRespons> signUp(@Body() SignUpRequest request);
+
+  @POST('auth/confirm-email')
+  Future<OtpRespons> confirmEmail(@Body() OtpRequest request);
 }

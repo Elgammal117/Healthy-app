@@ -68,3 +68,28 @@ class SignUpRespons {
 
   Map<String, dynamic> toJson() => _$SignUpResponsToJson(this);
 }
+
+@JsonSerializable(explicitToJson: true)
+class OtpRequest {
+  String? email;
+  String? otp;
+
+  OtpRequest({this.email, this.otp});
+
+  factory OtpRequest.fromJson(Map<String, dynamic> json) =>
+      _$OtpRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OtpRequestToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class OtpRespons {
+  bool? success;
+  String? message;
+
+  OtpRespons({this.success, this.message});
+
+  factory OtpRespons.fromJson(Map<String, dynamic> json) =>
+      _$OtpResponsFromJson(json);
+  Map<String, dynamic> toJson() => _$OtpResponsToJson(this);
+}

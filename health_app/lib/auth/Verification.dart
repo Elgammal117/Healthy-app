@@ -1,5 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/my_repo.dart';
+import 'package:health_app/network/web_services.dart';
+import 'package:health_app/profile/Data.dart';
 
 class Verification extends StatefulWidget {
   final String email;
@@ -19,8 +25,8 @@ class _VerificationState extends State<Verification> {
   @override
   void initState() {
     super.initState();
-    focusNodes = List.generate(4, (_) => FocusNode());
-    controllers = List.generate(4, (_) => TextEditingController());
+    focusNodes = List.generate(5, (_) => FocusNode());
+    controllers = List.generate(5, (_) => TextEditingController());
     startResendTimer();
   }
 
@@ -38,7 +44,7 @@ class _VerificationState extends State<Verification> {
 
   void handleCodeInput(int index, String value) {
     if (value.isNotEmpty) {
-      if (index < 3) {
+      if (index < 4) {
         focusNodes[index + 1].requestFocus();
       } else {
         focusNodes[index].unfocus();
@@ -47,7 +53,7 @@ class _VerificationState extends State<Verification> {
   }
 
   String getVerificationCode() {
-    return controllers.map((c) => c.text).join();
+    return controllers.map((controller) => controller.text).join();
   }
 
   void onResendTap() {
@@ -58,13 +64,53 @@ class _VerificationState extends State<Verification> {
     startResendTimer();
   }
 
-  void onVerifyTap() {
+  Future<void> onVerifyTap() async {
     final code = getVerificationCode();
-    if (code.length != 4) {
+    if (code.length != 5) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Please enter all 4 digits')));
+      ).showSnackBar(SnackBar(content: Text('Please enter all 5 digits')));
       return;
+    }
+
+    try {
+      final request = OtpRequest(email: widget.email, otp: code);
+      final myRepo = MyRepo(WebServices(Dio()));
+      final response = await myRepo.confirmEmail(request);
+
+      if (!mounted) return;
+
+      if (response.success == true) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Verification successful!')));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Data()),
+        );
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message ?? 'Invalid code. Please try again.'),
+        ),
+      );
+    } on DioException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.response?.data?['message']?.toString() ??
+                'Network error. Please try again.',
+          ),
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Something went wrong. Please try again.')),
+      );
     }
   }
 
@@ -130,7 +176,7 @@ class _VerificationState extends State<Verification> {
               // OTP Input Fields
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(4, (index) => _buildOTPField(index)),
+                children: List.generate(5, (index) => _buildOTPField(index)),
               ),
               SizedBox(height: 40),
               // Resend Code
