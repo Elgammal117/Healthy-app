@@ -3,7 +3,9 @@ import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/Button.dart';
 import 'package:health_app/The%20App/Steps.dart';
 
 class Food_Ingredients extends StatefulWidget {
-  const Food_Ingredients({Key? key}) : super(key: key);
+  final String token;
+
+  const Food_Ingredients({Key? key, required this.token}) : super(key: key);
 
   @override
   State<Food_Ingredients> createState() => _RecipeScreenState();
@@ -220,7 +222,7 @@ class _RecipeScreenState extends State<Food_Ingredients> {
                   ),
 
                   const SizedBox(height: 20),
-                  Button("Lets Cook", Steps()),
+                  Button("Lets Cook", Steps(token: widget.token)),
                 ],
               ),
             ),

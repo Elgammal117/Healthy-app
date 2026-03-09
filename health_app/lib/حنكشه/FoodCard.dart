@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/The%20App/Food_ingredients.dart';
 import 'package:provider/provider.dart';
-import 'package:health_app/حنكشه/favorites_manager.dart';
 
 class RecipeCard extends StatelessWidget {
   final String imageUrl;
@@ -11,6 +10,7 @@ class RecipeCard extends StatelessWidget {
   final int carbs;
   final int fat;
   final int cookTime;
+  final bool isFav;
 
   const RecipeCard({
     super.key,
@@ -21,18 +21,21 @@ class RecipeCard extends StatelessWidget {
     required this.carbs,
     required this.fat,
     required this.cookTime,
+    this.isFav = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final favoritesManager = context.watch<FavoritesManager>();
-    final isFav = favoritesManager.isFavorite(title);
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Food_Ingredients()),
+          MaterialPageRoute(
+            builder: (context) => Food_Ingredients(
+              token:
+                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE3NWMwNDM2MWE3OTIwMzQ4NDVkMDUiLCJlbWFpbCI6Im1vaGFtZWQuZ215NTU1QHlhaG9vLmNvbSIsImlhdCI6MTc3Mjc2MTgxOH0.OjxRKNnAxTi5TXi65qgiMXHvRc3vQGuyYM6e-r9E0X0',
+            ),
+          ),
         );
       },
       child: SizedBox(
@@ -123,17 +126,7 @@ class RecipeCard extends StatelessWidget {
                             isFav ? Icons.favorite : Icons.favorite_border,
                             color: isFav ? Color(0xFF00C896) : Colors.grey,
                           ),
-                          onPressed: () {
-                            favoritesManager.toggleFavorite({
-                              "name": title,
-                              "image": imageUrl,
-                              "calories": calories.toString(),
-                              "protein": protein.toString(),
-                              "carbs": carbs.toString(),
-                              "fat": fat.toString(),
-                              "cookTime": cookTime.toString(),
-                            });
-                          },
+                          onPressed: () {},
                         ),
                       ],
                     ),

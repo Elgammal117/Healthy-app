@@ -34,7 +34,12 @@ class _DataState extends State<Data> {
       // Last page → Go to Home
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const App()),
+        MaterialPageRoute(
+          builder: (context) => const App(
+            token:
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE3NWMwNDM2MWE3OTIwMzQ4NDVkMDUiLCJlbWFpbCI6Im1vaGFtZWQuZ215NTU1QHlhaG9vLmNvbSIsImlhdCI6MTc3Mjc2MTgxOH0.OjxRKNnAxTi5TXi65qgiMXHvRc3vQGuyYM6e-r9E0X0',
+          ),
+        ),
       );
     }
   }

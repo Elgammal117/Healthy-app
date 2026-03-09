@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:health_app/network/Favo.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:health_app/network/auth.dart';
 import 'package:retrofit/retrofit.dart';
@@ -19,4 +20,14 @@ abstract class WebServices {
 
   @POST('auth/confirm-email')
   Future<OtpRespons> confirmEmail(@Body() OtpRequest request);
+
+  @POST('auth/forget-password')
+  Future<ForgetPassRespons> forgetPassword(@Body() ForgetPassRequest request);
+  @POST('auth/verify-otp')
+  Future<OtpVerifyrespons> OtpVerify(@Body() OtpVerifyreq request);
+
+  @POST('auth/reset-password')
+  Future<ResetPassRespons> resetPassword(@Body() ResetPassReq request);
+  @GET('favorites')
+  Future<Favo> getFavorites(@Header('Authorization') String authHeader);
 }

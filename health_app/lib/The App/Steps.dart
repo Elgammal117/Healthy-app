@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:health_app/The%20App/Meal_Complete.dart';
 
 class Steps extends StatelessWidget {
-  const Steps({super.key});
+  final String token;
+
+  const Steps({super.key, required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +193,7 @@ class Steps extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MealCompletedScreen(),
+                          builder: (context) => MealCompletedScreen(token: token),
                         ),
                       );
                     },

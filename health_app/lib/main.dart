@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:health_app/auth/Login.dart';
-import 'package:health_app/auth/Signup.dart';
-import 'package:health_app/auth/Verification.dart';
-import 'package:provider/provider.dart';
-import 'package:health_app/حنكشه/favorites_manager.dart';
+import 'package:health_app/network/injection.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,13 +14,9 @@ void main() {
       systemNavigationBarColor: Colors.transparent,
     ),
   );
+  setup();
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => FavoritesManager(),
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -31,9 +24,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SignupPage(),
-    );
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: Login());
   }
 }

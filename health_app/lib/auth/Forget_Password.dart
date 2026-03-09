@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
 import 'package:health_app/auth/Login.dart';
+import 'package:health_app/auth/ResetPassword.dart';
+import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/injection.dart';
+import 'package:health_app/network/my_repo.dart';
 
 // ignore: must_be_immutable
 class ForgetPassword extends StatelessWidget {
@@ -20,7 +23,7 @@ class ForgetPassword extends StatelessWidget {
                 children: [
                   SizedBox(height: 50),
                   ClipRRect(
-                    borderRadius: BorderRadiusGeometry.circular(999),
+                    borderRadius: BorderRadius.circular(999),
                     child: SizedBox(
                       height: 256,
                       width: 256,
@@ -36,7 +39,7 @@ class ForgetPassword extends StatelessWidget {
                   SizedBox(height: 10),
                   Text(
                     textAlign: TextAlign.center,
-                    "Enter the email address associated with your account and we will send youa link to reset yor password",
+                    "Enter the email address associated with your account and we will send you a link to reset your password",
                     style: TextStyle(fontSize: 16, color: Color(0xff58645E)),
                   ),
                   SizedBox(height: 60),
@@ -76,7 +79,67 @@ class ForgetPassword extends StatelessWidget {
                   ),
                   SizedBox(height: 30),
 
-                  Button("Send Reset Link", Login()),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Color(0xff37EC13),
+                    ),
+                    height: 65,
+                    child: TextButton(
+                      onPressed: () async {
+                        if (email == null || email!.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please enter your email address'),
+                            ),
+                          );
+                          return;
+                        }
+                        try {
+                          final request = ForgetPassRequest(email: email!);
+                          final myRepo = getIt<MyRepo>();
+                          final response = await myRepo.forgetPassword(request);
+                          if (response.success == true) {
+                            SnackBar(content: Text('otp sent to your email'));
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ResetPassword(email: email!),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  response.message ??
+                                      'Failed to send reset link',
+                                ),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                'Error occurred during password reset: $e',
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text(
+                        'Send',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

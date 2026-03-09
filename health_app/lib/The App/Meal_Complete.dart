@@ -3,7 +3,9 @@ import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/Button.dart';
 import 'package:health_app/The%20App/App.dart';
 
 class MealCompletedScreen extends StatefulWidget {
-  const MealCompletedScreen({super.key});
+  final String token;
+  
+  const MealCompletedScreen({super.key, required this.token});
 
   @override
   State<MealCompletedScreen> createState() => _MealCompletedScreenState();
@@ -230,7 +232,7 @@ class _MealCompletedScreenState extends State<MealCompletedScreen> {
             ),
 
             const SizedBox(height: 20),
-            Button("Home", App()),
+            Button("Home", App(token: widget.token)),
           ],
         ),
       ),

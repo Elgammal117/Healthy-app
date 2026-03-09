@@ -1,15 +1,22 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 
 import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
-import 'package:health_app/network/web_services.dart';
 import 'package:health_app/profile/Data.dart';
 
 class Verification extends StatefulWidget {
   final String email;
-  const Verification({super.key, this.email = 'user@example.com'});
+  final SignUpRequest? signUpRequest;
+
+  const Verification({
+    super.key,
+    this.email = 'user@example.com',
+    this.signUpRequest,
+  });
 
   @override
   State<Verification> createState() => _VerificationState();
@@ -42,26 +49,57 @@ class _VerificationState extends State<Verification> {
     });
   }
 
-  void handleCodeInput(int index, String value) {
-    if (value.isNotEmpty) {
-      if (index < 4) {
-        focusNodes[index + 1].requestFocus();
-      } else {
-        focusNodes[index].unfocus();
-      }
-    }
-  }
-
   String getVerificationCode() {
     return controllers.map((controller) => controller.text).join();
   }
 
-  void onResendTap() {
-    setState(() {
-      resendCountdown = 45;
-      canResend = false;
-    });
-    startResendTimer();
+  Future<void> onResendTap() async {
+    if (!canResend) return;
+
+    final request = widget.signUpRequest;
+    if (request == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Missing signup data. Please sign up again.')),
+      );
+      return;
+    }
+
+    try {
+      final myRepo = getIt<MyRepo>();
+      final response = await myRepo.signUp(request);
+
+      if (!mounted) return;
+
+      if (response.success == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('A new verification code has been sent.')),
+        );
+        setState(() {
+          resendCountdown = 45;
+          canResend = false;
+        });
+        startResendTimer();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response.message ?? 'Failed to resend code.')),
+        );
+      }
+    } on DioException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.response?.data?['message']?.toString() ??
+                'Network error. Please try again.',
+          ),
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Something went wrong. Please try again.')),
+      );
+    }
   }
 
   Future<void> onVerifyTap() async {
@@ -75,7 +113,7 @@ class _VerificationState extends State<Verification> {
 
     try {
       final request = OtpRequest(email: widget.email, otp: code);
-      final myRepo = MyRepo(WebServices(Dio()));
+      final myRepo = getIt<MyRepo>();
       final response = await myRepo.confirmEmail(request);
 
       if (!mounted) return;
@@ -175,8 +213,53 @@ class _VerificationState extends State<Verification> {
               SizedBox(height: 50),
               // OTP Input Fields
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(5, (index) => _buildOTPField(index)),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return Container(
+                    width: 60,
+                    height: 70,
+                    margin: EdgeInsets.symmetric(horizontal: 4),
+                    child: TextField(
+                      controller: controllers[index],
+                      focusNode: focusNodes[index],
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      maxLength: 1,
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      decoration: InputDecoration(
+                        counterText: '',
+                        filled: true,
+                        fillColor: Color(0xffF1F5F9),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Color(0xffF1F5F9),
+                            width: 2,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Color(0xff37EC13),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: (value) {
+                        if (value.length == 1 && index < 4) {
+                          focusNodes[index + 1].requestFocus();
+                        } else if (value.isEmpty && index > 0) {
+                          focusNodes[index - 1].requestFocus();
+                        }
+                      },
+                    ),
+                  );
+                }),
               ),
               SizedBox(height: 40),
               // Resend Code
@@ -230,40 +313,6 @@ class _VerificationState extends State<Verification> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOTPField(int index) {
-    return Container(
-      width: 60,
-      height: 70,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: focusNodes[index].hasFocus
-              ? Color(0xFF37EC13)
-              : Colors.grey[300]!,
-          width: 2,
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: TextField(
-        controller: controllers[index],
-        focusNode: focusNodes[index],
-        keyboardType: TextInputType.number,
-        textAlign: TextAlign.center,
-        maxLength: 1,
-        onChanged: (value) => handleCodeInput(index, value),
-        decoration: InputDecoration(
-          counterText: '',
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.zero,
-        ),
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
         ),
       ),
     );

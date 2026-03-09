@@ -1,12 +1,9 @@
 import 'dart:ui';
-import 'package:dio/dio.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
 import 'package:health_app/The%20App/App.dart';
 import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
-import 'package:health_app/network/web_services.dart';
-
-import 'Forget_Password.dart';
+import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/Under_%D8%B5%D9%8A%D8%A7%D9%86%D9%87.dart';
 import 'package:flutter/material.dart';
 import 'Signup.dart';
 
@@ -198,7 +195,7 @@ class _Home_PageState extends State<Login> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ForgetPassword(),
+                          builder: (context) => UnderMaintenance(),
                         ),
                       );
                     },
@@ -245,7 +242,7 @@ class _Home_PageState extends State<Login> {
                                 email: email,
                                 password: password,
                               );
-                              final myRepo = MyRepo(WebServices(Dio()));
+                              final myRepo = getIt<MyRepo>();
 
                               final response = await myRepo.login(request);
 
@@ -253,7 +250,8 @@ class _Home_PageState extends State<Login> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => App(),
+                                    builder: (context) =>
+                                        App(token: response.token!),
                                   ),
                                 );
                               } else {

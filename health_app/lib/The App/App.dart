@@ -5,7 +5,9 @@ import 'package:health_app/The%20App/Home.dart';
 import 'package:health_app/The%20App/Profile.dart';
 
 class App extends StatefulWidget {
-  const App({super.key});
+  final String token;
+
+  const App({super.key, required this.token});
 
   @override
   State<App> createState() => _AppState();
@@ -18,7 +20,12 @@ class _AppState extends State<App> {
     return Scaffold(
       body: IndexedStack(
         index: selectedindex,
-        children: [HomePage(), FilteredResultsScreen(), Favorite(), Profile()],
+        children: [
+          HomePage(),
+          FilteredResultsScreen(),
+          Favorite(token: widget.token),
+          Profile(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [

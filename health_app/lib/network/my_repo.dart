@@ -1,3 +1,4 @@
+import 'package:health_app/network/Favo.dart';
 import 'package:health_app/network/auth.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:health_app/network/web_services.dart';
@@ -23,6 +24,26 @@ class MyRepo {
 
   Future<OtpRespons> confirmEmail(OtpRequest request) async {
     var respons = await webServices.confirmEmail(request);
+    return respons;
+  }
+
+  Future<ForgetPassRespons> forgetPassword(ForgetPassRequest request) async {
+    var respons = await webServices.forgetPassword(request);
+    return respons;
+  }
+
+  Future<OtpVerifyrespons> otpVerify(OtpVerifyreq request) async {
+    var respons = await webServices.OtpVerify(request);
+    return respons;
+  }
+
+  Future<ResetPassRespons> resetPassword(ResetPassReq request) async {
+    var respons = await webServices.resetPassword(request);
+    return respons;
+  }
+
+  Future<Favo> getFavorites(String token) async {
+    var respons = await webServices.getFavorites('Bearer $token');
     return respons;
   }
 }

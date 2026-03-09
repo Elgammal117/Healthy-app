@@ -1,12 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/button.dart';
 import 'package:health_app/auth/Login.dart';
 import 'package:health_app/auth/Verification.dart';
 import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
-import 'package:health_app/network/web_services.dart';
-import 'package:health_app/profile/Data.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -251,7 +248,7 @@ class _SignupPageState extends State<SignupPage> {
                               password: password,
                               phone: phone,
                             );
-                            final myRepo = MyRepo(WebServices(Dio()));
+                            final myRepo = getIt<MyRepo>();
                             final response = await myRepo.signUp(request);
 
                             if (response.success == true) {
@@ -261,11 +258,12 @@ class _SignupPageState extends State<SignupPage> {
                                   content: Text('Account created successfully'),
                                 ),
                               );
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => Verification(
                                     email: response.email ?? email ?? '',
+                                    signUpRequest: request,
                                   ),
                                 ),
                               );
@@ -283,7 +281,9 @@ class _SignupPageState extends State<SignupPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 backgroundColor: Colors.red,
-                                content: Text('Error: $e'),
+                                content: Text(
+                                  'An error occurred. Please try again.',
+                                ),
                               ),
                             );
                           } finally {

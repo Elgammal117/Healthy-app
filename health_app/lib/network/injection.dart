@@ -1,23 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:health_app/network/my_repo.dart';
+import 'package:health_app/network/web_services.dart';
 
 final getIt = GetIt.instance;
 
-// 1. Define your services
-class ApiClient {
-  Future<void> fetchData() async {
-    /* ... */
-  }
-}
-
-class UserRepository {
-  final ApiClient apiClient;
-  UserRepository(this.apiClient);
-}
-
-// 2. Register them at app startup
-void configureDependencies() {
-  getIt.registerSingleton<ApiClient>(ApiClient());
-  getIt.registerLazySingleton<UserRepository>(
-    () => UserRepository(getIt<ApiClient>()),
-  );
+void setup() {
+  getIt.registerLazySingleton<MyRepo>(() => MyRepo(getIt<WebServices>()));
+  getIt.registerSingleton<WebServices>(WebServices(Dio()));
 }

@@ -88,3 +88,53 @@ OtpRespons _$OtpResponsFromJson(Map<String, dynamic> json) => OtpRespons(
 
 Map<String, dynamic> _$OtpResponsToJson(OtpRespons instance) =>
     <String, dynamic>{'success': instance.success, 'message': instance.message};
+
+ForgetPassRequest _$ForgetPassRequestFromJson(Map<String, dynamic> json) =>
+    ForgetPassRequest(email: json['email'] as String?);
+
+Map<String, dynamic> _$ForgetPassRequestToJson(ForgetPassRequest instance) =>
+    <String, dynamic>{'email': instance.email};
+
+ForgetPassRespons _$ForgetPassResponsFromJson(Map<String, dynamic> json) =>
+    ForgetPassRespons(
+      success: json['success'] as bool?,
+      message: json['message'] as String?,
+    );
+
+Map<String, dynamic> _$ForgetPassResponsToJson(ForgetPassRespons instance) =>
+    <String, dynamic>{'success': instance.success, 'message': instance.message};
+
+OtpVerifyreq _$OtpVerifyreqFromJson(Map<String, dynamic> json) =>
+    OtpVerifyreq(email: json['email'] as String?, otp: json['otp'] as String?);
+
+Map<String, dynamic> _$OtpVerifyreqToJson(OtpVerifyreq instance) =>
+    <String, dynamic>{'email': instance.email, 'otp': instance.otp};
+
+OtpVerifyrespons _$OtpVerifyresponsFromJson(Map<String, dynamic> json) =>
+    OtpVerifyrespons(
+      success: json['success'] as bool?,
+      message: json['message'] as String?,
+    );
+
+Map<String, dynamic> _$OtpVerifyresponsToJson(OtpVerifyrespons instance) =>
+    <String, dynamic>{'success': instance.success, 'message': instance.message};
+
+ResetPassReq _$ResetPassReqFromJson(Map<String, dynamic> json) => ResetPassReq(
+  email: json['email'] as String?,
+  newPassword: json['newPassword'] as String?,
+);
+
+Map<String, dynamic> _$ResetPassReqToJson(ResetPassReq instance) =>
+    <String, dynamic>{
+      'email': instance.email,
+      'newPassword': instance.newPassword,
+    };
+
+ResetPassRespons _$ResetPassResponsFromJson(Map<String, dynamic> json) =>
+    ResetPassRespons(
+      success: json['success'] as bool?,
+      message: json['message'] as String?,
+    );
+
+Map<String, dynamic> _$ResetPassResponsToJson(ResetPassRespons instance) =>
+    <String, dynamic>{'success': instance.success, 'message': instance.message};
