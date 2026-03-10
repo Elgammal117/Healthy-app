@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:health_app/network/auth.dart';
 import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
-import 'package:health_app/profile/Data.dart';
 
 class Verification extends StatefulWidget {
   final String email;

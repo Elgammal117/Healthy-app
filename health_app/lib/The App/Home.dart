@@ -1,29 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/MealTag.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/macroBar.dart';
+import 'package:health_app/network/injection.dart';
+import 'package:health_app/network/my_repo.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String token;
+
+  const HomePage({super.key, required this.token});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  DateTime _selectedDate = DateTime.now(); // current date
-  double eaten = 1540;
-  double total = 2200;
+  int eaten = 1540;
+  int total = 2200;
 
-  double protein = 105;
-  double proteinTotal = 150;
+  int protein = 105;
+  int proteinTotal = 150;
 
-  double carbs = 140;
-  double carbsTotal = 200;
+  int carbs = 140;
+  int carbsTotal = 200;
 
-  double fats = 49;
-  double fatsTotal = 70;
+  int fats = 49;
+  int fatsTotal = 70;
   int selectedindex = 0;
+  @override
+  void initState() {
+    super.initState();
+    _loadHomeData();
+  }
+
+  Future<void> _loadHomeData() async {
+    try {
+      final respons = getIt<MyRepo>();
+      final repo = await respons.getProfile(widget.token);
+      if (!mounted) return;
+
+      if (repo.success == true) {
+        setState(() {
+          total = repo.data?.dailyCalories ?? 0;
+          proteinTotal = repo.data?.macros?.protein ?? 0;
+          carbsTotal = repo.data?.macros?.carbohydrates ?? 0;
+          fatsTotal = repo.data?.macros?.fats ?? 0;
+        });
+      }
+    } catch (e) {
+      print("Error occurred while loading home data: $e");
+    }
+  }
+
+  DateTime _selectedDate = DateTime.now(); // current date
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

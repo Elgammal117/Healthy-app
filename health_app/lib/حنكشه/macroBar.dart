@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-Widget macroBar(String name, double value, double total) {
+Widget macroBar(String name, int value, int total) {
+  final double progress = total > 0 ? (value / total).clamp(0.0, 1.0) : 0.0;
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -24,7 +26,7 @@ Widget macroBar(String name, double value, double total) {
         borderRadius: BorderRadius.circular(10),
 
         child: LinearProgressIndicator(
-          value: value / total,
+          value: progress,
           minHeight: 8,
           backgroundColor: Colors.grey.shade200,
           color: const Color(0xff13EC80),

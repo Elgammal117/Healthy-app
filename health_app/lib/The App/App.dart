@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_app/The%20App/Discover.dart';
 import 'package:health_app/The%20App/Favorite.dart';
 import 'package:health_app/The%20App/Home.dart';
-import 'package:health_app/The%20App/Profile.dart';
+import 'package:health_app/The%20App/UserProfile.dart';
 
 class App extends StatefulWidget {
   final String token;
@@ -21,10 +21,10 @@ class _AppState extends State<App> {
       body: IndexedStack(
         index: selectedindex,
         children: [
-          HomePage(),
+          HomePage(token: widget.token),
           FilteredResultsScreen(),
           Favorite(token: widget.token),
-          Profile(),
+          Userprofile(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

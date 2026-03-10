@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:health_app/network/profile.dart';
 import 'package:health_app/network/Favo.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:health_app/network/auth.dart';
@@ -36,4 +37,6 @@ abstract class WebServices {
     @Header('Authorization') String authHeader,
     @Body() CreateProfileReqest request,
   );
+  @GET('profile/me')
+  Future<GetProfile> getProfile(@Header('Authorization') String authHeader);
 }

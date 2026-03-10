@@ -1,5 +1,6 @@
 import 'package:health_app/network/Favo.dart';
 import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/profile.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:health_app/network/web_services.dart';
 
@@ -52,6 +53,11 @@ class MyRepo {
     CreateProfileReqest request,
   ) async {
     var respons = await webServices.createProfile('Bearer $token', request);
+    return respons;
+  }
+
+  Future<GetProfile> getProfile(String token) async {
+    var respons = await webServices.getProfile('Bearer $token');
     return respons;
   }
 }
