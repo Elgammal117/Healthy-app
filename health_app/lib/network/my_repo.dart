@@ -46,4 +46,12 @@ class MyRepo {
     var respons = await webServices.getFavorites('Bearer $token');
     return respons;
   }
+
+  Future<CreateProfileRespons> createProfile(
+    String token,
+    CreateProfileReqest request,
+  ) async {
+    var respons = await webServices.createProfile('Bearer $token', request);
+    return respons;
+  }
 }

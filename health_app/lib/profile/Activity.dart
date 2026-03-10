@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:health_app/profile/Data.dart';
 
 class Activity extends StatefulWidget {
-  const Activity({super.key});
+  final UserData userData;
+
+  const Activity({super.key, required this.userData});
 
   @override
   State<Activity> createState() => _ActivityState();
@@ -31,6 +34,7 @@ class _ActivityState extends State<Activity> {
               GestureDetector(
                 onTap: () {
                   selectedActivity = 0;
+                  widget.userData.activity = 'low';
                   setState(() {});
                 },
                 child: Container(
@@ -103,6 +107,7 @@ class _ActivityState extends State<Activity> {
               GestureDetector(
                 onTap: () {
                   selectedActivity = 1;
+                  widget.userData.activity = 'high';
                   setState(() {});
                 },
                 child: Container(
@@ -174,6 +179,7 @@ class _ActivityState extends State<Activity> {
               GestureDetector(
                 onTap: () {
                   selectedActivity = 2;
+                  widget.userData.activity = 'low';
                   setState(() {});
                 },
                 child: Container(
@@ -245,6 +251,7 @@ class _ActivityState extends State<Activity> {
               GestureDetector(
                 onTap: () {
                   selectedActivity = 3;
+                  widget.userData.activity = 'high';
                   setState(() {});
                 },
                 child: Container(

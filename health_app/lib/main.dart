@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:health_app/auth/Login.dart';
+import 'package:health_app/auth/Verification.dart';
 import 'package:health_app/network/injection.dart';
+import 'package:health_app/profile/Data.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +26,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(debugShowCheckedModeBanner: false, home: Login());
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: Data());
   }
 }

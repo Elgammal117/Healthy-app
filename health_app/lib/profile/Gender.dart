@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:health_app/profile/Data.dart';
 
 class Gender extends StatefulWidget {
-  const Gender({super.key});
+  final UserData userData;
+
+  const Gender({super.key, required this.userData});
 
   @override
   State<Gender> createState() => _GenderState();
@@ -38,6 +41,7 @@ class _GenderState extends State<Gender> {
                   onTap: () {
                     setState(() {
                       selectedGender = 0;
+                      widget.userData.gender = "male";
                     });
                   },
                   child: Container(
@@ -80,6 +84,7 @@ class _GenderState extends State<Gender> {
                   onTap: () {
                     setState(() {
                       selectedGender = 1;
+                      widget.userData.gender = "female";
                     });
                   },
                   child: Container(
@@ -120,40 +125,11 @@ class _GenderState extends State<Gender> {
               ],
             ),
             SizedBox(height: 40),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedGender = 2;
-                });
-              },
-              child: Container(
-                alignment: Alignment.center,
-                height: 50,
-                width: 170,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: selectedGender == 2
-                        ? Color(0xff13EC80)
-                        : Colors.white,
-                    width: 3,
-                  ),
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(9999),
-                ),
-                child: Text(
-                  "Prefer not to say",
-                  style: TextStyle(
-                    color: Color(0xff4B5563),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ),
+
             Spacer(),
             Text(
               textAlign: TextAlign.center,
-              "By continuing you agree to our Terms of Seervice and privacy Policy",
+              "By continuing you agree to our Terms of Service and privacy Policy",
               style: TextStyle(color: Color(0xff6B7280), fontSize: 12),
             ),
             SizedBox(height: 20),

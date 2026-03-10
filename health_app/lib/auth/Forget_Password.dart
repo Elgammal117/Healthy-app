@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:health_app/auth/Login.dart';
-import 'package:health_app/auth/ResetPassword.dart';
+import 'package:health_app/auth/otp_reset_pass.dart';
 import 'package:health_app/network/auth.dart';
 import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
@@ -106,7 +105,7 @@ class ForgetPassword extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    ResetPassword(email: email!),
+                                    OtpResetPass(email: email!),
                               ),
                             );
                           } else {

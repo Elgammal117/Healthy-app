@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/The%20App/App.dart';
+import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/injection.dart';
+import 'package:health_app/network/my_repo.dart';
 import 'package:health_app/profile/Activity.dart';
 import 'package:health_app/profile/Age.dart';
 import 'package:health_app/profile/Current_Weight.dart';
@@ -17,8 +20,9 @@ class Data extends StatefulWidget {
 
 class _DataState extends State<Data> {
   final PageController _controller = PageController();
+  final UserData userData = UserData();
   int currentPage = 0;
-  void _nextStep() {
+  Future<void> _nextStep() async {
     if (currentPage < 6) {
       // Still inside PageView
       setState(() {
@@ -31,16 +35,57 @@ class _DataState extends State<Data> {
         curve: Curves.easeInOut,
       );
     } else {
-      // Last page → Go to Home
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const App(
-            token:
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE3NWMwNDM2MWE3OTIwMzQ4NDVkMDUiLCJlbWFpbCI6Im1vaGFtZWQuZ215NTU1QHlhaG9vLmNvbSIsImlhdCI6MTc3Mjc2MTgxOH0.OjxRKNnAxTi5TXi65qgiMXHvRc3vQGuyYM6e-r9E0X0',
+      try {
+        print("User Data:");
+        print("Gender: ${userData.gender}");
+        print("Age: ${userData.age}");
+        print("Height: ${userData.height} cm");
+        print("Current Weight: ${userData.currentWeight} kg");
+        print("Goal Weight: ${userData.goalWeight} kg");
+        print("Activity Level: ${userData.activity}");
+        print("Goal: ${userData.goal}");
+        print("Target Weight Change: ${userData.targetLoseKG} kg");
+        final request = CreateProfileReqest(
+          height: userData.height!,
+          weight: userData.currentWeight!,
+          age: userData.age!,
+          gender: userData.gender!,
+          activityLevel: userData.activity!,
+          goal: userData.goal!,
+          targetLoseKg: userData.targetLoseKG!,
+        );
+        final repo = getIt<MyRepo>();
+        final respons = await repo.createProfile(
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE3NWMwNDM2MWE3OTIwMzQ4NDVkMDUiLCJlbWFpbCI6Im1vaGFtZWQuZ215NTU1QHlhaG9vLmNvbSIsImlhdCI6MTc3Mjc2MTgxOH0.OjxRKNnAxTi5TXi65qgiMXHvRc3vQGuyYM6e-r9E0X0',
+          request,
+        );
+        if (respons.success == true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.green,
+              content: Text('Account created successfully'),
+            ),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const App(
+                token:
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE3NWMwNDM2MWE3OTIwMzQ4NDVkMDUiLCJlbWFpbCI6Im1vaGFtZWQuZ215NTU1QHlhaG9vLmNvbSIsImlhdCI6MTc3Mjc2MTgxOH0.OjxRKNnAxTi5TXi65qgiMXHvRc3vQGuyYM6e-r9E0X0',
+              ),
+            ),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Error occurred during profile creation: $e'),
           ),
-        ),
-      );
+        );
+      }
+
+      // Last page → Go to Home
     }
   }
 
@@ -77,13 +122,13 @@ class _DataState extends State<Data> {
               physics: NeverScrollableScrollPhysics(),
 
               children: [
-                Gender(),
-                Age(),
-                Height(),
-                CurrentWeight(),
-                GoalWeight(),
-                Activity(),
-                Plan(),
+                Gender(userData: userData),
+                Age(userData: userData),
+                Height(userData: userData),
+                CurrentWeight(userData: userData),
+                GoalWeight(userData: userData),
+                Activity(userData: userData),
+                Plan(userData: userData),
               ],
             ),
           ),
@@ -114,5 +159,32 @@ class _DataState extends State<Data> {
         ],
       ),
     );
+  }
+}
+
+class UserData {
+  String? gender;
+  int? age;
+  int? height;
+  int? currentWeight;
+  int? goalWeight;
+  String? activity;
+
+  // Calculate goal based on current vs goal weight
+  String? get goal {
+    if (currentWeight == null || goalWeight == null) return null;
+    if (currentWeight! > goalWeight!) {
+      return 'lose';
+    } else if (currentWeight! < goalWeight!) {
+      return 'gain';
+    } else {
+      return 'maintain';
+    }
+  }
+
+  // Calculate target lose/gain weight
+  int? get targetLoseKG {
+    if (currentWeight == null || goalWeight == null) return null;
+    return (currentWeight! - goalWeight!).abs();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/Maintainence.dart';
 import 'dart:async';
 
 import 'package:health_app/network/auth.dart';
@@ -124,7 +125,7 @@ class _VerificationState extends State<Verification> {
         ).showSnackBar(SnackBar(content: Text('Verification successful!')));
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Data()),
+          MaterialPageRoute(builder: (context) => UnderMaintenance()),
         );
         return;
       }

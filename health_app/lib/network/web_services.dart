@@ -30,4 +30,10 @@ abstract class WebServices {
   Future<ResetPassRespons> resetPassword(@Body() ResetPassReq request);
   @GET('favorites')
   Future<Favo> getFavorites(@Header('Authorization') String authHeader);
+
+  @POST('profile/upsert')
+  Future<CreateProfileRespons> createProfile(
+    @Header('Authorization') String authHeader,
+    @Body() CreateProfileReqest request,
+  );
 }

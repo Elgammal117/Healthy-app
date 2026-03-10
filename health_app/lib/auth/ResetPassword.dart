@@ -1,6 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:health_app/network/auth.dart';
+import 'package:health_app/network/injection.dart';
+import 'package:health_app/network/my_repo.dart';
 
 class ResetPassword extends StatefulWidget {
   final String? email;
@@ -11,77 +12,28 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
-  final List<TextEditingController> _controllers = List.generate(
-    5,
-    (index) => TextEditingController(),
-  );
-  final List<FocusNode> _focusNodes = List.generate(5, (index) => FocusNode());
+  bool isPasswordNotVisible1 = true;
+  bool isPasswordNotVisible2 = true;
+  String? newPassword;
+  String? confirmPassword;
 
-  int _remainingSeconds = 59;
-  Timer? _timer;
-  bool _canResend = false;
+  // Password validation states
+  bool hasMinLength = false;
+  bool hasNumberOrSymbol = false;
+  bool hasUppercase = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _startTimer();
-  }
-
-  void _startTimer() {
-    _canResend = false;
-    _remainingSeconds = 59;
-    _timer?.cancel();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_remainingSeconds > 0) {
-          _remainingSeconds--;
-        } else {
-          _canResend = true;
-          _timer?.cancel();
-        }
-      });
+  void validatePassword(String password) {
+    setState(() {
+      hasMinLength = password.length >= 8;
+      hasNumberOrSymbol = RegExp(
+        r'[0-9!@#\$%^&*(),.?":{}|<>_\-+=~`/\\\[\]]',
+      ).hasMatch(password);
+      hasUppercase = RegExp(r'[A-Z]').hasMatch(password);
     });
   }
 
-  void _resendCode() {
-    if (_canResend) {
-      // TODO: Implement resend code API call
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Code resent to ${widget.email ?? "your email"}'),
-        ),
-      );
-      _startTimer();
-    }
-  }
-
-  String _getOtpCode() {
-    return _controllers.map((controller) => controller.text).join();
-  }
-
-  void _verifyCode() {
-    String otp = _getOtpCode();
-    if (otp.length != 5) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter the complete 5-digit code')),
-      );
-      return;
-    } else
-      // TODO: Implement OTP verification and navigate to new password screen
-      print('Verifying OTP: $otp for email: ${widget.email}');
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
-    for (var node in _focusNodes) {
-      node.dispose();
-    }
-    super.dispose();
-  }
+  bool get isStrongPassword =>
+      hasMinLength && hasNumberOrSymbol && hasUppercase;
 
   @override
   Widget build(BuildContext context) {
@@ -95,217 +47,295 @@ class _ResetPasswordState extends State<ResetPassword> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Reset Password',
+          'Security',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                SizedBox(height: 40),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        children: [
+          SizedBox(height: 20),
 
-                // Icon
-                Container(
-                  width: 180,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xffC8F4C0),
-                  ),
-                  child: Center(
-                    child: Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Icon(
-                        Icons.lock_reset,
-                        size: 60,
-                        color: Color(0xff37EC13),
-                      ),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 60),
-
-                // Title
-                Text(
-                  'Enter the 5-digit code',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-
-                SizedBox(height: 12),
-
-                // Description
-                Text(
-                  'Enter the 4-digit code sent to your email to\nreset your password',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xff94A3B8),
-                    height: 1.5,
-                  ),
-                ),
-
-                SizedBox(height: 50),
-
-                // OTP Input Fields
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) {
-                    return Container(
-                      width: 60,
-                      height: 70,
-                      margin: EdgeInsets.symmetric(horizontal: 4),
-                      child: TextField(
-                        controller: _controllers[index],
-                        focusNode: _focusNodes[index],
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        maxLength: 1,
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                          counterText: '',
-                          filled: true,
-                          fillColor: Color(0xffF1F5F9),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Color(0xffF1F5F9),
-                              width: 2,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Color(0xff37EC13),
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        onChanged: (value) {
-                          if (value.length == 1 && index < 4) {
-                            _focusNodes[index + 1].requestFocus();
-                          } else if (value.isEmpty && index > 0) {
-                            _focusNodes[index - 1].requestFocus();
-                          }
-                        },
-                      ),
-                    );
-                  }),
-                ),
-
-                SizedBox(height: 30),
-
-                // Timer and Resend
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Resend Code in ',
-                      style: TextStyle(fontSize: 14, color: Color(0xff94A3B8)),
-                    ),
-                    Text(
-                      '00:${_remainingSeconds.toString().padLeft(2, '0')}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: _canResend
-                            ? Color(0xff94A3B8)
-                            : Color(0xff37EC13),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 8),
-
-                GestureDetector(
-                  onTap: _resendCode,
-                  child: Text(
-                    'Resend now',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: _canResend ? Color(0xff37EC13) : Color(0xff94A3B8),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 100),
-
-                // Verify Button
-                Container(
-                  width: double.infinity,
-                  height: 65,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color(0xff37EC13),
-                  ),
-                  child: TextButton(
-                    onPressed: _verifyCode,
-                    child: Text(
-                      'Verify Code',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 20),
-
-                // Footer
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.restaurant_menu,
-                      size: 16,
-                      color: Color(0xff94A3B8),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'PREMIUM COOKBOOK APP',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Color(0xff94A3B8),
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 30),
-              ],
+          // Title
+          Text(
+            "Create New Password",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 32,
+              color: Colors.black,
             ),
           ),
-        ),
+          SizedBox(height: 12),
+
+          // Description
+          Text(
+            "Your new password must be different from previously used passwords. Use a mix of characters for better security.",
+            style: TextStyle(
+              fontSize: 15,
+              color: Color(0xff64748B),
+              height: 1.5,
+            ),
+          ),
+          SizedBox(height: 32),
+
+          // New Password Label
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'New Password',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Color(0xff1E293B),
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+
+          // New Password Field
+          TextField(
+            strutStyle: StrutStyle(height: 1.5),
+            onChanged: (value) {
+              newPassword = value;
+              validatePassword(value);
+            },
+            obscureText: isPasswordNotVisible1,
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Color(0xffE2E8F0)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Color(0xff37EC13), width: 1.5),
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              hintStyle: TextStyle(color: Color(0xff94A3B8)),
+              hintText: 'Enter your new password',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  isPasswordNotVisible1
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  color: Color(0xff94A3B8),
+                ),
+                onPressed: () {
+                  setState(() {
+                    isPasswordNotVisible1 = !isPasswordNotVisible1;
+                  });
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+
+          // Password Strength Indicator
+          if (newPassword != null && newPassword!.isNotEmpty)
+            Text(
+              isStrongPassword ? 'Strong password' : 'Weak password',
+              style: TextStyle(
+                fontSize: 14,
+                color: isStrongPassword ? Color(0xff22C55E) : Color(0xffEF4444),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          SizedBox(height: 24),
+
+          // Confirm Password Label
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Confirm New Password',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Color(0xff1E293B),
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+
+          // Confirm Password Field
+          TextField(
+            strutStyle: StrutStyle(height: 1.5),
+            onChanged: (value) {
+              confirmPassword = value;
+            },
+            obscureText: isPasswordNotVisible2,
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Color(0xffE2E8F0)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Color(0xff37EC13), width: 1.5),
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              hintStyle: TextStyle(color: Color(0xff94A3B8)),
+              hintText: 'Re-enter your new password',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  isPasswordNotVisible2
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  color: Color(0xff94A3B8),
+                ),
+                onPressed: () {
+                  setState(() {
+                    isPasswordNotVisible2 = !isPasswordNotVisible2;
+                  });
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 24),
+
+          // Validation Rules
+          _buildValidationRule('At least 8 characters', hasMinLength),
+          SizedBox(height: 12),
+          _buildValidationRule(
+            'Contains a number or symbol',
+            hasNumberOrSymbol,
+          ),
+          SizedBox(height: 12),
+          _buildValidationRule('One uppercase letter', hasUppercase),
+          SizedBox(height: 80),
+
+          // Update Password Button
+          Container(
+            width: double.infinity,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              color: Color(0xff37EC13),
+            ),
+            child: TextButton(
+              onPressed: () async {
+                if (newPassword == null || newPassword!.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Please enter a new password')),
+                  );
+                  return;
+                }
+
+                if (!isStrongPassword) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please meet all password requirements'),
+                    ),
+                  );
+                  return;
+                }
+
+                if (newPassword != confirmPassword) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Passwords do not match')),
+                  );
+                  return;
+                } else {
+                  try {
+                    final request = ResetPassReq(
+                      email: widget.email!,
+                      newPassword: newPassword!,
+                    );
+                    final repo = getIt<MyRepo>();
+                    final response = await repo.resetPassword(request);
+
+                    if (response.success == true) {
+                      Navigator.pop(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            response.message ?? 'Password reset failed',
+                          ),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text('Error occurred during reset password'),
+                      ),
+                    );
+                  }
+                }
+              },
+              child: Text(
+                'Update Password',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+
+          // Contact Support
+          Center(
+            child: RichText(
+              text: TextSpan(
+                text: 'Having trouble? ',
+                style: TextStyle(fontSize: 15, color: Color(0xff64748B)),
+                children: [
+                  TextSpan(
+                    text: 'Contact Support',
+                    style: TextStyle(
+                      color: Color(0xff37EC13),
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Color(0xff37EC13),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 40),
+        ],
       ),
+    );
+  }
+
+  Widget _buildValidationRule(String label, bool isValid) {
+    return Row(
+      children: [
+        Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isValid ? Color(0xff22C55E) : Colors.transparent,
+            border: Border.all(
+              color: isValid ? Color(0xff22C55E) : Color(0xffCBD5E1),
+              width: 2,
+            ),
+          ),
+          child: isValid
+              ? Icon(Icons.check, color: Colors.white, size: 14)
+              : null,
+        ),
+        SizedBox(width: 12),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 15,
+            color: Color(0xff64748B),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }

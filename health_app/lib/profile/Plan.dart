@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:health_app/profile/Data.dart';
 
 class PageIndicator extends StatelessWidget {
   final int currentIndex;
@@ -34,7 +35,9 @@ class PageIndicator extends StatelessWidget {
 }
 
 class Plan extends StatefulWidget {
-  const Plan({super.key});
+  final UserData userData;
+
+  const Plan({super.key, required this.userData});
 
   @override
   State<Plan> createState() => _PlanState();

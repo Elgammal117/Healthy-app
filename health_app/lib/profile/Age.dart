@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:health_app/profile/Data.dart';
 
 class Age extends StatefulWidget {
-  const Age({super.key});
+  final UserData userData;
+
+  const Age({super.key, required this.userData});
 
   @override
   State<Age> createState() => _AgeState();
@@ -11,7 +14,7 @@ class _AgeState extends State<Age> {
   final ScrollController _controller = ScrollController();
 
   int minAge = 18;
-  int maxAge = 100;
+  int maxAge = 80;
 
   double itemWidth = 15;
 
@@ -20,6 +23,9 @@ class _AgeState extends State<Age> {
   @override
   void initState() {
     super.initState();
+
+    // Set initial default value
+    widget.userData.age = currentAge;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToAge(currentAge);
@@ -30,23 +36,20 @@ class _AgeState extends State<Age> {
 
   void _scrollToAge(int age) {
     if (!_controller.hasClients) return;
-    final viewportWidth = _controller.position.viewportDimension;
-    double offset =
-        (age - minAge) * itemWidth - viewportWidth / 2 + itemWidth / 2;
+    double offset = (age - minAge) * itemWidth;
     offset = offset.clamp(0.0, _controller.position.maxScrollExtent);
     _controller.jumpTo(offset);
   }
 
   void _onScroll() {
     if (!_controller.hasClients) return;
-    final centerOffset =
-        _controller.offset + _controller.position.viewportDimension / 2;
-    int index = (centerOffset / itemWidth).round();
+    int index = (_controller.offset / itemWidth).round();
     int age = (minAge + index).clamp(minAge, maxAge);
 
     if (age != currentAge) {
       setState(() {
         currentAge = age;
+        widget.userData.age = age;
       });
     }
   }
@@ -96,26 +99,28 @@ class _AgeState extends State<Age> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    ListView.builder(
-                      controller: _controller,
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final padding = constraints.maxWidth / 2;
+                        return ListView.builder(
+                          controller: _controller,
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          padding: EdgeInsets.symmetric(horizontal: padding),
+                          itemCount: (maxAge - minAge + 1),
+                          itemBuilder: (context, index) {
+                            bool isMajor = index % 5 == 0;
 
-                      itemCount: (maxAge - minAge + 1),
-
-                      itemBuilder: (context, index) {
-                        bool isMajor = index % 5 == 0;
-
-                        return Container(
-                          width: itemWidth,
-
-                          alignment: Alignment.bottomCenter,
-
-                          child: Container(
-                            width: 2,
-                            height: isMajor ? 35 : 20,
-                            color: Colors.grey.shade400,
-                          ),
+                            return Container(
+                              width: itemWidth,
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                width: 2,
+                                height: isMajor ? 35 : 20,
+                                color: Colors.grey.shade400,
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
