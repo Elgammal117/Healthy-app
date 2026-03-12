@@ -39,4 +39,10 @@ abstract class WebServices {
   );
   @GET('profile/me')
   Future<GetProfile> getProfile(@Header('Authorization') String authHeader);
+
+  @POST('favorites/{foodId}')
+  Future<AddRecipeToFavorite> addFavorite(
+    @Header('Authorization') String authHeader,
+    @Path("foodId") String foodId,
+  );
 }

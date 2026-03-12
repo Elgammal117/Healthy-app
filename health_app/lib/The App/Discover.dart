@@ -7,14 +7,15 @@ import 'package:health_app/network/my_repo.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:health_app/network/web_services.dart';
 
-class FilteredResultsScreen extends StatefulWidget {
-  const FilteredResultsScreen({Key? key}) : super(key: key);
+class Discover extends StatefulWidget {
+  const Discover({Key? key, this.token}) : super(key: key);
+  final String? token;
 
   @override
-  State<FilteredResultsScreen> createState() => _FilteredResultsScreenState();
+  State<Discover> createState() => _DiscoverState();
 }
 
-class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
+class _DiscoverState extends State<Discover> {
   List<String> activeFilters = ['Under 500 kcal', 'High Protein'];
   String sortBy = 'Calories Low to High';
   int mealCount = 128;
@@ -201,6 +202,10 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     itemBuilder: (context, index) {
                       final recipe = recipes[index];
                       return RecipeCard(
+                        isFav: recipe.isFavorite ?? false,
+                        token: widget.token ?? 'error',
+                        foodId: recipe.sId ?? '',
+
                         imageUrl: recipe.image?.secureUrl ?? '',
                         title: recipe.name ?? 'No name',
                         calories: recipe.calories ?? 0,

@@ -34,7 +34,7 @@ class _ActivityState extends State<Activity> {
               GestureDetector(
                 onTap: () {
                   selectedActivity = 0;
-                  widget.userData.activity = 'low';
+                  widget.userData.activity = 'sedentary';
                   setState(() {});
                 },
                 child: Container(
@@ -107,7 +107,7 @@ class _ActivityState extends State<Activity> {
               GestureDetector(
                 onTap: () {
                   selectedActivity = 1;
-                  widget.userData.activity = 'high';
+                  widget.userData.activity = 'light';
                   setState(() {});
                 },
                 child: Container(
@@ -179,7 +179,7 @@ class _ActivityState extends State<Activity> {
               GestureDetector(
                 onTap: () {
                   selectedActivity = 2;
-                  widget.userData.activity = 'low';
+                  widget.userData.activity = 'moderate';
                   setState(() {});
                 },
                 child: Container(
@@ -251,7 +251,7 @@ class _ActivityState extends State<Activity> {
               GestureDetector(
                 onTap: () {
                   selectedActivity = 3;
-                  widget.userData.activity = 'high';
+                  widget.userData.activity = 'very';
                   setState(() {});
                 },
                 child: Container(

@@ -118,3 +118,18 @@ Map<String, dynamic> _$StepsToJson(Steps instance) => <String, dynamic>{
   'description': instance.description,
   'sId': instance.sId,
 };
+
+AddRecipeToFavorite _$AddRecipeToFavoriteFromJson(Map<String, dynamic> json) =>
+    AddRecipeToFavorite(
+      success: json['success'] as bool?,
+      message: json['message'] as String?,
+      isFavorite: json['isFavorite'] as bool?,
+    );
+
+Map<String, dynamic> _$AddRecipeToFavoriteToJson(
+  AddRecipeToFavorite instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  'message': instance.message,
+  'isFavorite': instance.isFavorite,
+};

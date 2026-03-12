@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/The%20App/Food_ingredients.dart';
-import 'package:provider/provider.dart';
+import 'package:health_app/network/injection.dart';
+import 'package:health_app/network/my_repo.dart';
 
-class RecipeCard extends StatelessWidget {
+class RecipeCard extends StatefulWidget {
   final String imageUrl;
   final String title;
   final int calories;
@@ -11,9 +12,14 @@ class RecipeCard extends StatelessWidget {
   final int fat;
   final int cookTime;
   final bool isFav;
+  final String token;
+  final String foodId;
 
   const RecipeCard({
     super.key,
+
+    required this.token,
+    required this.foodId,
     required this.imageUrl,
     required this.title,
     required this.calories,
@@ -25,16 +31,20 @@ class RecipeCard extends StatelessWidget {
   });
 
   @override
+  State<RecipeCard> createState() => _RecipeCardState();
+}
+
+class _RecipeCardState extends State<RecipeCard> {
+  late bool isFav;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Food_Ingredients(
-              token:
-                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE3NWMwNDM2MWE3OTIwMzQ4NDVkMDUiLCJlbWFpbCI6Im1vaGFtZWQuZ215NTU1QHlhaG9vLmNvbSIsImlhdCI6MTc3Mjc2MTgxOH0.OjxRKNnAxTi5TXi65qgiMXHvRc3vQGuyYM6e-r9E0X0',
-            ),
+            builder: (context) => Food_Ingredients(token: widget.token),
           ),
         );
       },
@@ -54,12 +64,14 @@ class RecipeCard extends StatelessWidget {
                   top: Radius.circular(16),
                 ),
                 child: Image.network(
-                  imageUrl,
+                  widget.imageUrl,
                   height: 120,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    print('Image Error for $imageUrl: $error'); // Debug log
+                    print(
+                      'Image Error for ${widget.imageUrl}: $error',
+                    ); // Debug log
                     return Container(
                       height: 120,
                       color: Colors.grey[300],
@@ -69,7 +81,7 @@ class RecipeCard extends StatelessWidget {
                           const Icon(Icons.broken_image, color: Colors.grey),
                           const SizedBox(height: 4),
                           Text(
-                            'URL: $imageUrl',
+                            'URL: ${widget.imageUrl}',
                             style: const TextStyle(fontSize: 10),
                           ),
                         ],
@@ -88,7 +100,7 @@ class RecipeCard extends StatelessWidget {
 
                     // Title
                     Text(
-                      title,
+                      widget.title,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -99,13 +111,13 @@ class RecipeCard extends StatelessWidget {
 
                     const SizedBox(height: 8),
 
-                    _buildMacro('$calories kcal'),
+                    _buildMacro('${widget.calories} kcal'),
 
                     Row(
                       children: [
-                        _buildMacro('${protein}g P'),
-                        _buildMacro('${carbs}g C'),
-                        _buildMacro('${fat}g F'),
+                        _buildMacro('${widget.protein}g P'),
+                        _buildMacro('${widget.carbs}g C'),
+                        _buildMacro('${widget.fat}g F'),
                       ],
                     ),
 
@@ -117,16 +129,42 @@ class RecipeCard extends StatelessWidget {
                           children: [
                             const Icon(Icons.access_time, size: 16),
                             const SizedBox(width: 4),
-                            Text('$cookTime min'),
+                            Text('${widget.cookTime} min'),
                           ],
                         ),
 
                         IconButton(
                           icon: Icon(
                             isFav ? Icons.favorite : Icons.favorite_border,
-                            color: isFav ? Color(0xFF00C896) : Colors.grey,
+                            color: isFav
+                                ? const Color(0xFF00C896)
+                                : Colors.grey,
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              debugPrint('foodId: ${widget.foodId}');
+                              debugPrint('token: ${widget.token}');
+                              final repo = getIt<MyRepo>();
+                              final response = await repo.addFavorite(
+                                widget.token,
+                                widget.foodId,
+                              );
+
+                              if (response.success == true) {
+                                setState(() {
+                                  // Toggle favorite state
+                                  isFav = !isFav;
+                                });
+                              }
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Failed to update favorite'),
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),

@@ -19,6 +19,7 @@ class Recipes {
 class Data {
   Image? image;
   Macros? macros;
+  @JsonKey(name: '_id')
   String? sId;
   String? name;
   String? description;

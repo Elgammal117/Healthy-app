@@ -7,8 +7,9 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Favorite extends StatefulWidget {
   final String token;
+  final bool isActive;
 
-  Favorite({super.key, required this.token});
+  const Favorite({super.key, required this.token, required this.isActive});
 
   @override
   State<Favorite> createState() => _FavoriteState();
@@ -18,11 +19,29 @@ class _FavoriteState extends State<Favorite> {
   late Future<Favo> favoritesFuture;
   int mealCount = 128;
 
+  void _loadFavorites() {
+    final myRepo = getIt<MyRepo>();
+    favoritesFuture = myRepo.getFavorites(widget.token);
+  }
+
   @override
   void initState() {
     super.initState();
-    final myRepo = getIt<MyRepo>();
-    favoritesFuture = myRepo.getFavorites(widget.token);
+    _loadFavorites();
+  }
+
+  @override
+  void didUpdateWidget(covariant Favorite oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final becameActive = !oldWidget.isActive && widget.isActive;
+    final tokenChanged = oldWidget.token != widget.token;
+
+    if (becameActive || tokenChanged) {
+      setState(() {
+        _loadFavorites();
+      });
+    }
   }
 
   @override
@@ -119,6 +138,9 @@ class _FavoriteState extends State<Favorite> {
                           itemBuilder: (context, index) {
                             final recipe = recipes[index];
                             return RecipeCard(
+                              isFav: recipe.isFavorite ?? false,
+                              token: widget.token,
+                              foodId: recipe.sId ?? '',
                               imageUrl: recipe.image?.secureUrl ?? '',
                               title: recipe.name ?? 'No name',
                               calories: recipe.calories ?? 0,

@@ -60,4 +60,9 @@ class MyRepo {
     var respons = await webServices.getProfile('Bearer $token');
     return respons;
   }
+
+  Future<AddRecipeToFavorite> addFavorite(String token, String foodId) async {
+    var respons = await webServices.addFavorite('Bearer $token', foodId);
+    return respons;
+  }
 }

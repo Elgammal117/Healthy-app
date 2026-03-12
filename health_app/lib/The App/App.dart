@@ -22,8 +22,8 @@ class _AppState extends State<App> {
         index: selectedindex,
         children: [
           HomePage(token: widget.token),
-          FilteredResultsScreen(),
-          Favorite(token: widget.token),
+          Discover(token: widget.token),
+          Favorite(token: widget.token, isActive: selectedindex == 2),
           Userprofile(),
         ],
       ),

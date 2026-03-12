@@ -31,7 +31,7 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   macros: json['macros'] == null
       ? null
       : Macros.fromJson(json['macros'] as Map<String, dynamic>),
-  sId: json['sId'] as String?,
+  sId: json['_id'] as String?,
   name: json['name'] as String?,
   description: json['description'] as String?,
   mealType: json['mealType'] as String?,
@@ -58,7 +58,7 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'image': instance.image?.toJson(),
   'macros': instance.macros?.toJson(),
-  'sId': instance.sId,
+  '_id': instance.sId,
   'name': instance.name,
   'description': instance.description,
   'mealType': instance.mealType,

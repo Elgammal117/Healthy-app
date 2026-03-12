@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of profile_model;
+part of 'profile.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

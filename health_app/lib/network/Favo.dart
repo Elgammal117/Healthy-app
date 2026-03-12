@@ -113,3 +113,17 @@ class Steps {
 
   Map<String, dynamic> toJson() => _$StepsToJson(this);
 }
+
+@JsonSerializable(explicitToJson: true)
+class AddRecipeToFavorite {
+  bool? success;
+  String? message;
+  bool? isFavorite;
+
+  AddRecipeToFavorite({this.success, this.message, this.isFavorite});
+
+  factory AddRecipeToFavorite.fromJson(Map<String, dynamic> json) =>
+      _$AddRecipeToFavoriteFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AddRecipeToFavoriteToJson(this);
+}
