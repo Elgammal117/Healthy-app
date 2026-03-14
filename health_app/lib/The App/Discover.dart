@@ -202,10 +202,9 @@ class _DiscoverState extends State<Discover> {
                     itemBuilder: (context, index) {
                       final recipe = recipes[index];
                       return RecipeCard(
-                        isFav: recipe.isFavorite ?? false,
                         token: widget.token ?? 'error',
                         foodId: recipe.sId ?? '',
-
+                        isFav: recipe.isFavorite ?? false,
                         imageUrl: recipe.image?.secureUrl ?? '',
                         title: recipe.name ?? 'No name',
                         calories: recipe.calories ?? 0,

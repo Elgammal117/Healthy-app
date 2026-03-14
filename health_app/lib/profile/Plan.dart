@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:health_app/profile/Data.dart';
+import 'package:health_app/profile/CreateProfile.dart';
 
 class PageIndicator extends StatelessWidget {
   final int currentIndex;

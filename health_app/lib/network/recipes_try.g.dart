@@ -122,3 +122,31 @@ Map<String, dynamic> _$StepsToJson(Steps instance) => <String, dynamic>{
   'description': instance.description,
   'sId': instance.sId,
 };
+
+RecipeById _$RecipeByIdFromJson(Map<String, dynamic> json) => RecipeById(
+  success: json['success'] as bool?,
+  data: json['data'] == null
+      ? null
+      : Data.fromJson(json['data'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$RecipeByIdToJson(RecipeById instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'data': instance.data?.toJson(),
+    };
+
+AddRecipeToFavorite _$AddRecipeToFavoriteFromJson(Map<String, dynamic> json) =>
+    AddRecipeToFavorite(
+      success: json['success'] as bool?,
+      message: json['message'] as String?,
+      isFavorite: json['isFavorite'] as bool?,
+    );
+
+Map<String, dynamic> _$AddRecipeToFavoriteToJson(
+  AddRecipeToFavorite instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  'message': instance.message,
+  'isFavorite': instance.isFavorite,
+};

@@ -11,13 +11,12 @@ class RecipeCard extends StatefulWidget {
   final int carbs;
   final int fat;
   final int cookTime;
-  final bool isFav;
   final String token;
   final String foodId;
-
+  final bool isFav;
   const RecipeCard({
     super.key,
-
+    required this.isFav,
     required this.token,
     required this.foodId,
     required this.imageUrl,
@@ -27,7 +26,6 @@ class RecipeCard extends StatefulWidget {
     required this.carbs,
     required this.fat,
     required this.cookTime,
-    this.isFav = false,
   });
 
   @override
@@ -35,7 +33,7 @@ class RecipeCard extends StatefulWidget {
 }
 
 class _RecipeCardState extends State<RecipeCard> {
-  late bool isFav;
+  late bool isFav = widget.isFav;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +42,8 @@ class _RecipeCardState extends State<RecipeCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Food_Ingredients(token: widget.token),
+            builder: (context) =>
+                Food_Ingredients(token: widget.token, foodId: widget.foodId),
           ),
         );
       },
@@ -152,9 +151,15 @@ class _RecipeCardState extends State<RecipeCard> {
 
                               if (response.success == true) {
                                 setState(() {
-                                  // Toggle favorite state
                                   isFav = !isFav;
                                 });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Favorite updated successfully',
+                                    ),
+                                  ),
+                                );
                               }
                             } catch (e) {
                               if (!context.mounted) return;

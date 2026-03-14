@@ -1,19 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/Maintainence.dart';
 import 'dart:async';
 
 import 'package:health_app/network/auth.dart';
 import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
+import 'package:health_app/profile/CreateProfile.dart';
 
 class Verification extends StatefulWidget {
   final String email;
+  final String password;
   final SignUpRequest? signUpRequest;
 
   const Verification({
     super.key,
+    this.password = '',
     this.email = 'user@example.com',
     this.signUpRequest,
   });
@@ -124,7 +126,10 @@ class _VerificationState extends State<Verification> {
         ).showSnackBar(SnackBar(content: Text('Verification successful!')));
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => UnderMaintenance()),
+          MaterialPageRoute(
+            builder: (context) =>
+                CreateProfile(email: widget.email, password: widget.password),
+          ),
         );
         return;
       }

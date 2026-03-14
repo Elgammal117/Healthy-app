@@ -15,16 +15,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int eaten = 1540;
+  int eaten = 0;
   int total = 2200;
 
-  int protein = 105;
+  int protein = 0;
   int proteinTotal = 150;
 
-  int carbs = 140;
+  int carbs = 0;
   int carbsTotal = 200;
 
-  int fats = 49;
+  int fats = 0;
   int fatsTotal = 70;
   int selectedindex = 0;
   @override

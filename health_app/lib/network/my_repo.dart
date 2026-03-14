@@ -1,4 +1,3 @@
-import 'package:health_app/network/Favo.dart';
 import 'package:health_app/network/auth.dart';
 import 'package:health_app/network/profile.dart';
 import 'package:health_app/network/recipes_try.dart';
@@ -43,7 +42,7 @@ class MyRepo {
     return respons;
   }
 
-  Future<Favo> getFavorites(String token) async {
+  Future<Recipes> getFavorites(String token) async {
     var respons = await webServices.getFavorites('Bearer $token');
     return respons;
   }
@@ -63,6 +62,11 @@ class MyRepo {
 
   Future<AddRecipeToFavorite> addFavorite(String token, String foodId) async {
     var respons = await webServices.addFavorite('Bearer $token', foodId);
+    return respons;
+  }
+
+  Future<RecipeById> getrecipebyid(String foodId) async {
+    var respons = await webServices.getrecipebyid(foodId);
     return respons;
   }
 }

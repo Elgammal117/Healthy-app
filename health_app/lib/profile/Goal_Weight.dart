@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:health_app/profile/Data.dart';
+import 'package:health_app/profile/CreateProfile.dart';
 
 class GoalWeight extends StatefulWidget {
   final UserData userData;

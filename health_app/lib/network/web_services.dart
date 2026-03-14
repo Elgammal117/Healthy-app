@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:health_app/network/profile.dart';
-import 'package:health_app/network/Favo.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:health_app/network/auth.dart';
 import 'package:retrofit/retrofit.dart';
@@ -30,7 +29,7 @@ abstract class WebServices {
   @POST('auth/reset-password')
   Future<ResetPassRespons> resetPassword(@Body() ResetPassReq request);
   @GET('favorites')
-  Future<Favo> getFavorites(@Header('Authorization') String authHeader);
+  Future<Recipes> getFavorites(@Header('Authorization') String authHeader);
 
   @POST('profile/upsert')
   Future<CreateProfileRespons> createProfile(
@@ -45,4 +44,6 @@ abstract class WebServices {
     @Header('Authorization') String authHeader,
     @Path("foodId") String foodId,
   );
+  @GET('recipes/{foodId}')
+  Future<RecipeById> getrecipebyid(@Path("foodId") String foodId);
 }

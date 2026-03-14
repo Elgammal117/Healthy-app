@@ -11,17 +11,33 @@ import 'package:health_app/profile/Goal_Weight.dart';
 import 'package:health_app/profile/Height.dart';
 import 'package:health_app/profile/Plan.dart';
 
-class Data extends StatefulWidget {
-  const Data({super.key});
+class CreateProfile extends StatefulWidget {
+  const CreateProfile({super.key, required this.email, required this.password});
+
+  final String email;
+  final String password;
 
   @override
-  State<Data> createState() => _DataState();
+  State<CreateProfile> createState() => _CreateProfileState();
 }
 
-class _DataState extends State<Data> {
+class _CreateProfileState extends State<CreateProfile> {
+  late final MyRepo myrepo;
+  late final LoginRequest request;
+  late final Future<LoginRespons> respons;
+
   final PageController _controller = PageController();
   final UserData userData = UserData();
   int currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    myrepo = getIt<MyRepo>();
+    request = LoginRequest(email: widget.email, password: widget.password);
+    respons = myrepo.login(request);
+  }
+
   Future<void> _nextStep() async {
     if (currentPage < 6) {
       // Still inside PageView
@@ -36,16 +52,14 @@ class _DataState extends State<Data> {
       );
     } else {
       try {
-        print("User Data:");
-        print("Gender: ${userData.gender}");
-        print("Age: ${userData.age}");
-        print("Height: ${userData.height} cm");
-        print("Current Weight: ${userData.currentWeight} kg");
-        print("Goal Weight: ${userData.goalWeight} kg");
-        print("Activity Level: ${userData.activity}");
-        print("Goal: ${userData.goal}");
-        print("Target Weight Change: ${userData.targetLoseKG} kg");
-        final request = CreateProfileReqest(
+        final loginResponse = await respons;
+        final token = loginResponse.token;
+
+        if (token == null || token.isEmpty) {
+          throw Exception('Login token is missing');
+        }
+
+        final profileRequest = CreateProfileReqest(
           height: userData.height!,
           weight: userData.currentWeight!,
           age: userData.age!,
@@ -54,26 +68,21 @@ class _DataState extends State<Data> {
           goal: userData.goal!,
           targetLoseKg: userData.targetLoseKG!,
         );
-        final repo = getIt<MyRepo>();
-        final respons = await repo.createProfile(
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE3NWMwNDM2MWE3OTIwMzQ4NDVkMDUiLCJlbWFpbCI6Im1vaGFtZWQuZ215NTU1QHlhaG9vLmNvbSIsImlhdCI6MTc3Mjc2MTgxOH0.OjxRKNnAxTi5TXi65qgiMXHvRc3vQGuyYM6e-r9E0X0',
-          request,
+        final createProfileResponse = await myrepo.createProfile(
+          token,
+          profileRequest,
         );
-        if (respons.success == true) {
+        if (createProfileResponse.success == true) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.green,
               content: Text('Account created successfully'),
             ),
           );
+          if (!mounted) return;
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder: (context) => const App(
-                token:
-                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE3NWMwNDM2MWE3OTIwMzQ4NDVkMDUiLCJlbWFpbCI6Im1vaGFtZWQuZ215NTU1QHlhaG9vLmNvbSIsImlhdCI6MTc3Mjc2MTgxOH0.OjxRKNnAxTi5TXi65qgiMXHvRc3vQGuyYM6e-r9E0X0',
-              ),
-            ),
+            MaterialPageRoute(builder: (context) => App(token: token)),
           );
         }
       } catch (e) {

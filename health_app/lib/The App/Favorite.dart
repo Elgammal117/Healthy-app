@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/FoodCard.dart';
-import 'package:health_app/network/Favo.dart';
 import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:health_app/network/recipes_try.dart';
 
 class Favorite extends StatefulWidget {
   final String token;
@@ -16,7 +16,7 @@ class Favorite extends StatefulWidget {
 }
 
 class _FavoriteState extends State<Favorite> {
-  late Future<Favo> favoritesFuture;
+  late Future<Recipes> favoritesFuture;
   int mealCount = 128;
 
   void _loadFavorites() {
@@ -106,7 +106,7 @@ class _FavoriteState extends State<Favorite> {
 
                   // Grid
                   // Replace the GridView.builder part with this:
-                  FutureBuilder<Favo>(
+                  FutureBuilder<Recipes>(
                     future: favoritesFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -138,7 +138,7 @@ class _FavoriteState extends State<Favorite> {
                           itemBuilder: (context, index) {
                             final recipe = recipes[index];
                             return RecipeCard(
-                              isFav: recipe.isFavorite ?? false,
+                              isFav: recipe.isFavorite ?? true,
                               token: widget.token,
                               foodId: recipe.sId ?? '',
                               imageUrl: recipe.image?.secureUrl ?? '',
