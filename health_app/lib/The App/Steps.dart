@@ -1,17 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/The%20App/Meal_Complete.dart';
 
-class Steps extends StatelessWidget {
+class Steps extends StatefulWidget {
   final String token;
   final String name;
-  final List<Object> steps;
+  final List<dynamic> steps;
+  final String foodId;
 
   const Steps({
     super.key,
+    required this.foodId,
     required this.token,
     required this.steps,
     required this.name,
   });
+
+  @override
+  State<Steps> createState() => _StepsState();
+}
+
+class _StepsState extends State<Steps> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _goBack(BuildContext context) {
+    if (_currentPage > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
+  void _goNext(BuildContext context) {
+    if (widget.steps.isEmpty) return;
+
+    if (_currentPage < widget.steps.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            MealCompletedScreen(token: widget.token, foodId: widget.foodId),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +75,7 @@ class Steps extends StatelessWidget {
         ),
 
         title: Text(
-          name,
+          widget.name,
           style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w600,
@@ -39,10 +86,21 @@ class Steps extends StatelessWidget {
       ),
 
       body: PageView.builder(
-        itemBuilder: (context, index) {
-          return step();
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentPage = index;
+          });
         },
-        itemCount: steps.length,
+        itemBuilder: (context, index) {
+          int currentpage = index + 1;
+          return step(
+            steps: widget.steps,
+            currentStep: currentpage,
+            description: widget.steps[index].description ?? "",
+          );
+        },
+        itemCount: widget.steps.length,
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(20),
@@ -59,7 +117,7 @@ class Steps extends StatelessWidget {
             // Back
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: () {},
+                onPressed: widget.steps.isEmpty ? null : () => _goBack(context),
 
                 icon: const Icon(Icons.arrow_back),
 
@@ -78,14 +136,7 @@ class Steps extends StatelessWidget {
             const SizedBox(width: 15),
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MealCompletedScreen(token: token),
-                    ),
-                  );
-                },
+                onPressed: widget.steps.isEmpty ? null : () => _goNext(context),
 
                 icon: const Text(""),
 
@@ -113,7 +164,16 @@ class Steps extends StatelessWidget {
 }
 
 class step extends StatefulWidget {
-  const step({super.key});
+  final List<dynamic> steps;
+  final int currentStep;
+  final String description;
+
+  const step({
+    super.key,
+    required this.steps,
+    required this.currentStep,
+    required this.description,
+  });
 
   @override
   State<step> createState() => _stepState();
@@ -132,13 +192,11 @@ class _stepState extends State<step> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
-                    "Sautéing Aromatics",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    "Step ${widget.currentStep} of ${widget.steps.length}",
+                    style: TextStyle(color: Colors.grey),
                   ),
-
-                  Text("Step 3 of 10", style: TextStyle(color: Colors.grey)),
                 ],
               ),
 
@@ -147,7 +205,7 @@ class _stepState extends State<step> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: LinearProgressIndicator(
-                  value: 0.3, // 3 / 10
+                  value: (widget.currentStep) / (widget.steps.length),
                   minHeight: 8,
                   backgroundColor: Colors.green.shade100,
                   color: Colors.green,
@@ -164,78 +222,39 @@ class _stepState extends State<step> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
 
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-
-              children: [
-                const Text(
-                  "Step 3",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                ),
-
-                const SizedBox(height: 15),
-
-                const Text(
-                  "Finely dice the onion and sauté in the pan "
-                  "with a drizzle of olive oil until they become "
-                  "translucent and fragrant, about 3–4 minutes.",
-
-                  style: TextStyle(fontSize: 17, height: 1.5),
-                ),
-
-                const SizedBox(height: 30),
-
-                // Macro Card
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade50,
-                    borderRadius: BorderRadius.circular(16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Step ${widget.currentStep}",
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
 
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(height: 15),
 
-                    children: const [
-                      Text(
-                        "Macro Context",
-                        style: TextStyle(color: Colors.grey, fontSize: 13),
-                      ),
-
-                      SizedBox(height: 5),
-
-                      Text(
-                        "Adding 45 kcal • 2g Healthy Fats",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Timer Button
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade300),
+                  Text(
+                    widget.description,
+                    style: TextStyle(
+                      fontSize: 18,
+                      height: 1.5,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
 
-                  child: ListTile(
-                    leading: const Icon(Icons.timer),
-                    title: const Text("Set 4-minute timer"),
-                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    onTap: () {},
-                  ),
-                ),
+                  const SizedBox(height: 30),
 
-                const SizedBox(height: 80),
-              ],
+                  // Macro Card
+                  const SizedBox(height: 20),
+
+                  // Timer Button
+                  const SizedBox(height: 80),
+                ],
+              ),
             ),
           ),
         ),

@@ -264,6 +264,7 @@ class _RecipeScreenState extends State<Food_Ingredients> {
                       Button(
                         "Lets Cook",
                         Steps(
+                          foodId: widget.foodId,
                           token: widget.token,
                           steps: recipeData.steps ?? [],
                           name: recipeData.name ?? '',

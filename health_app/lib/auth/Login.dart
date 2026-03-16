@@ -247,6 +247,8 @@ class _Home_PageState extends State<Login> {
                               final response = await myRepo.login(request);
 
                               if (response.success == true) {
+                                print(response.token);
+
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

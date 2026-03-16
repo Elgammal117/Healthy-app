@@ -30,21 +30,23 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    print("TOKEN IN HOME = ${widget.token}");
     _loadHomeData();
   }
 
   Future<void> _loadHomeData() async {
     try {
-      final respons = getIt<MyRepo>();
-      final repo = await respons.getProfile(widget.token);
+      final myrepo = getIt<MyRepo>();
+
+      final respons = await myrepo.getProfile(widget.token);
       if (!mounted) return;
 
-      if (repo.success == true) {
+      if (respons.success == true) {
         setState(() {
-          total = repo.data?.dailyCalories ?? 0;
-          proteinTotal = repo.data?.macros?.protein ?? 0;
-          carbsTotal = repo.data?.macros?.carbohydrates ?? 0;
-          fatsTotal = repo.data?.macros?.fats ?? 0;
+          total = respons.data?.dailyCalories ?? 0;
+          proteinTotal = respons.data?.macros?.protein ?? 0;
+          carbsTotal = respons.data?.macros?.carbohydrates ?? 0;
+          fatsTotal = respons.data?.macros?.fats ?? 0;
         });
       }
     } catch (e) {

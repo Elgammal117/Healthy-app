@@ -1,7 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:health_app/network/injection.dart';
+import 'package:health_app/network/my_repo.dart';
 
-class Userprofile extends StatelessWidget {
-  const Userprofile({super.key});
+class Userprofile extends StatefulWidget {
+  final String token;
+
+  const Userprofile({super.key, required this.token});
+
+  @override
+  State<Userprofile> createState() => _UserprofileState();
+}
+
+class _UserprofileState extends State<Userprofile> {
+  int total = 2200;
+
+  int proteinTotal = 150;
+
+  int carbsTotal = 200;
+
+  int fatsTotal = 70;
+  String name = "Mohammed";
+  String? activityLevel;
+  String? goal;
+  int? hight;
+  int? weight;
+  int? age;
+  @override
+  void initState() {
+    super.initState();
+    _loadHomeData();
+  }
+
+  Future<void> _loadHomeData() async {
+    try {
+      final respons = getIt<MyRepo>();
+      final repo = await respons.getProfile(widget.token);
+      print(repo.toJson());
+      if (!mounted) return;
+
+      if (repo.success == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Profile data loaded successfully")),
+        );
+        setState(() {
+          print("Profile data loaded successfully: ${repo.data}");
+
+          total = repo.data?.dailyCalories ?? 0;
+          proteinTotal = repo.data?.macros?.protein ?? 0;
+          carbsTotal = repo.data?.macros?.carbohydrates ?? 0;
+          fatsTotal = repo.data?.macros?.fats ?? 0;
+          activityLevel = repo.data?.activityLevel;
+          goal = repo.data?.goal;
+          hight = repo.data?.height;
+          weight = repo.data?.weight;
+          age = repo.data?.age;
+        });
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Failed to load profile data")));
+      }
+    } catch (e) {
+      print("Error occurred while loading home data: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +127,8 @@ class Userprofile extends StatelessWidget {
                       color: Colors.green.withOpacity(.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Text(
-                      "● FAT LOSS | MODERATE ACTIVITY",
+                    child: Text(
+                      "● $goal | $activityLevel",
                       style: TextStyle(
                         color: Colors.green,
                         fontWeight: FontWeight.w600,
@@ -101,10 +163,10 @@ class Userprofile extends StatelessWidget {
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        _StatBox(title: "HEIGHT (CM)", value: "177"),
-                        _StatBox(title: "WEIGHT (KG)", value: "80"),
-                        _StatBox(title: "AGE (YRS)", value: "22"),
+                      children: [
+                        _StatBox(title: "HEIGHT (CM)", value: "$hight"),
+                        _StatBox(title: "WEIGHT (KG)", value: "$weight"),
+                        _StatBox(title: "AGE (YRS)", value: "$age"),
                       ],
                     ),
                   ],
@@ -152,8 +214,8 @@ class Userprofile extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    const Text(
-                      "2,200",
+                    Text(
+                      "$total",
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
@@ -172,21 +234,21 @@ class Userprofile extends StatelessWidget {
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         _MacroBox(
                           color: Colors.blue,
                           title: "PROTEIN",
-                          value: "150g",
+                          value: "$proteinTotal",
                         ),
                         _MacroBox(
                           color: Colors.orange,
                           title: "CARBS",
-                          value: "200g",
+                          value: "$carbsTotal",
                         ),
                         _MacroBox(
                           color: Colors.red,
                           title: "FATS",
-                          value: "70g",
+                          value: "$fatsTotal",
                         ),
                       ],
                     ),

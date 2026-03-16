@@ -14,6 +14,12 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  @override
+  void initState() {
+    super.initState();
+    print("TOKEN IN APP = ${widget.token}");
+  }
+
   int selectedindex = 0;
   @override
   Widget build(BuildContext context) {
@@ -24,7 +30,7 @@ class _AppState extends State<App> {
           HomePage(token: widget.token),
           Discover(token: widget.token),
           Favorite(token: widget.token, isActive: selectedindex == 2),
-          Userprofile(),
+          Userprofile(token: widget.token),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
