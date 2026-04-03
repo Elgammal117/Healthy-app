@@ -3,6 +3,7 @@ import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/MealTag.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/macroBar.dart';
 import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
+import 'package:health_app/network/Getmealbydate.dart' hide Image;
 import 'package:table_calendar/table_calendar.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,6 +28,10 @@ class _HomePageState extends State<HomePage> {
   int fats = 0;
   int fatsTotal = 70;
   int selectedindex = 0;
+
+  int result = 0;
+  List<Data> meals = [];
+
   @override
   void initState() {
     super.initState();
@@ -36,17 +41,36 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadHomeData() async {
     try {
+      final myreepo1 = getIt<MyRepo>();
+      final respons1 = await myreepo1.getmealsbydate(
+        widget.token,
+        _selectedDate.toIso8601String(),
+      );
+      if (!mounted) return;
+      if (respons1.success == true) {
+        setState(() {
+          meals = respons1.data ?? [];
+        });
+      }
+
       final myrepo = getIt<MyRepo>();
 
-      final respons = await myrepo.getProfile(widget.token);
+      final respons = await myrepo.getdailystatus(
+        widget.token,
+        _selectedDate.toIso8601String(),
+      );
       if (!mounted) return;
 
       if (respons.success == true) {
         setState(() {
-          total = respons.data?.dailyCalories ?? 0;
-          proteinTotal = respons.data?.macros?.protein ?? 0;
-          carbsTotal = respons.data?.macros?.carbohydrates ?? 0;
-          fatsTotal = respons.data?.macros?.fats ?? 0;
+          total = respons.target?.calories ?? 0;
+          proteinTotal = respons.target?.protein ?? 0;
+          carbsTotal = respons.target?.carbohydrates ?? 0;
+          fatsTotal = respons.target?.fats ?? 0;
+          eaten = respons.consumed?.calories ?? 0;
+          protein = respons.consumed?.protein ?? 0;
+          carbs = respons.consumed?.carbohydrates ?? 0;
+          fats = respons.consumed?.fats ?? 0;
         });
       }
     } catch (e) {
@@ -104,6 +128,7 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     _selectedDate = selectedDay;
                   });
+                  _loadHomeData();
                 },
 
                 headerStyle: const HeaderStyle(
@@ -237,7 +262,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Text(
-                'Recommended for You',
+                'Meals you have today',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -249,9 +274,9 @@ class _HomePageState extends State<HomePage> {
                 text: const TextSpan(
                   style: TextStyle(fontSize: 14, color: Color(0xFF4C9A73)),
                   children: [
-                    TextSpan(text: 'Based on your remaining '),
+                    TextSpan(text: 'Based on your target of '),
                     TextSpan(
-                      text: '800 kcal',
+                      text: 'Calories',
                       style: TextStyle(
                         color: Color(0xFF13EC80),
                         fontWeight: FontWeight.w600,
@@ -261,39 +286,23 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(height: 10),
-              MealCard(
-                title: 'Grilled Salmon & Avocado',
-                calories: 450,
-                cookTime: 20,
-                protein: 35,
-                carbs: 10,
-                fat: 2,
-                imageUrl: 'assets/salmon.jpg',
-                isFavorite: true,
-              ),
-              SizedBox(height: 10),
-              MealCard(
-                protein: 35,
-                carbs: 10,
-                fat: 2,
-                title: 'Quinoa Harvest Bowl',
-                calories: 380,
-                cookTime: 15,
+              ...meals.map((meal) {
+                print("IMAGE URL = ${meal.recipeId?.image?.secureUrl}");
 
-                imageUrl: 'assets/quinoa.jpg',
-                isFavorite: false,
-              ),
-              SizedBox(height: 10),
-              MealCard(
-                protein: 35,
-                carbs: 10,
-                fat: 2,
-                title: 'Zucchini Pesto Zoodles',
-                calories: 290,
-                cookTime: 10,
-                imageUrl: 'assets/zoodles.jpg',
-                isFavorite: false,
-              ),
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: MealCard(
+                    title: meal.recipeId?.name ?? 'Meal',
+                    calories: meal.recipeId?.calories ?? 0,
+                    cookTime: 0, // Not available in API
+                    protein: meal.macros?.protein ?? 0,
+                    carbs: meal.macros?.carbohydrates ?? 0,
+                    fat: meal.macros?.fats ?? 0,
+                    imageUrl: meal.recipeId?.image?.secureUrl ?? "",
+                    isFavorite: false,
+                  ),
+                );
+              }).toList(),
             ],
           ),
         ),

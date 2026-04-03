@@ -1,3 +1,6 @@
+import 'package:health_app/network/AddMeal.dart';
+import 'package:health_app/network/DailyStatus.dart';
+import 'package:health_app/network/Getmealbydate.dart';
 import 'package:health_app/network/auth.dart';
 import 'package:health_app/network/profile.dart';
 import 'package:health_app/network/recipes_try.dart';
@@ -67,6 +70,21 @@ class MyRepo {
 
   Future<RecipeById> getrecipebyid(String foodId) async {
     var respons = await webServices.getrecipebyid(foodId);
+    return respons;
+  }
+
+  Future<AddMealRespons> addMeal(String token, AddMealRequest request) async {
+    var respons = await webServices.addMeal('Bearer $token', request);
+    return respons;
+  }
+
+  Future<DailyStatusRespons> getdailystatus(String token, String date) async {
+    var respons = await webServices.getdailystatus('Bearer $token', date);
+    return respons;
+  }
+
+  Future<GetMealByDateRespons> getmealsbydate(String token, String date) async {
+    var respons = await webServices.getmealsbydate('Bearer $token', date);
     return respons;
   }
 }

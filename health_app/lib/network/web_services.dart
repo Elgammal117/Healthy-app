@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
+import 'package:health_app/network/AddMeal.dart';
+import 'package:health_app/network/DailyStatus.dart';
+import 'package:health_app/network/Getmealbydate.dart';
 import 'package:health_app/network/profile.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:health_app/network/auth.dart';
 import 'package:retrofit/retrofit.dart';
 part 'web_services.g.dart';
 
-@RestApi(baseUrl: 'http://healthy-app.eu-4.evennode.com/')
+@RestApi(baseUrl: 'https://healthy-app-production.up.railway.app/')
 abstract class WebServices {
   factory WebServices(Dio dio, {String? baseUrl}) = _WebServices;
 
@@ -46,4 +49,21 @@ abstract class WebServices {
   );
   @GET('recipes/{foodId}')
   Future<RecipeById> getrecipebyid(@Path("foodId") String foodId);
+  @POST('meals/add')
+  Future<AddMealRespons> addMeal(
+    @Header('Authorization') String authHeader,
+    @Body() AddMealRequest request,
+  );
+
+  @GET('/meals/status?date={date}')
+  Future<DailyStatusRespons> getdailystatus(
+    @Header('Authorization') String authHeader,
+    @Path("date") String date,
+  );
+
+  @GET('/meals/?date={date}')
+  Future<GetMealByDateRespons> getmealsbydate(
+    @Header('Authorization') String authHeader,
+    @Path("date") String date,
+  );
 }

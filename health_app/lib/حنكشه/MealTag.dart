@@ -62,17 +62,30 @@ class _MealCardState extends State<MealCard> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: const Color(0xFF2A2A2A),
-              image: DecorationImage(
-                image: NetworkImage(widget.imageUrl),
-                fit: BoxFit.cover,
-                onError: (exception, stackTrace) {},
-              ),
             ),
-            // Placeholder if image fails to load
-            child: const Icon(
-              Icons.restaurant,
-              color: Colors.white38,
-              size: 32,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                widget.imageUrl,
+                fit: BoxFit.cover,
+
+                // ✅ show loading
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return const Center(child: CircularProgressIndicator());
+                },
+
+                // ✅ fallback if error
+                errorBuilder: (context, error, stackTrace) {
+                  return const Center(
+                    child: Icon(
+                      Icons.restaurant,
+                      color: Colors.white38,
+                      size: 32,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           // Content

@@ -192,7 +192,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
                 child: const Text(
                   "Show 248 Recipes",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

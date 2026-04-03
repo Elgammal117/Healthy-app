@@ -47,236 +47,248 @@ class _RecipeScreenState extends State<Food_Ingredients> {
         }
         return Scaffold(
           backgroundColor: Color(0xffF6F8F6),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 220,
-                      width: double.infinity,
-                      child: ClipRRect(
-                        child: Image.network(
-                          recipeData.image?.secureUrl ?? '',
-                          fit: BoxFit.cover,
+                    Stack(
+                      children: [
+                        SizedBox(
+                          height: 220,
+                          width: double.infinity,
+                          child: ClipRRect(
+                            child: Image.network(
+                              recipeData.image?.secureUrl ?? '',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
+                        Positioned(
+                          top: 16,
+                          left: 16,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ],
                     ),
-                    Positioned(
-                      top: 16,
-                      left: 16,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {},
+
+                    // Content Section
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Tags
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.green[50],
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  'High Protein',
+                                  style: TextStyle(
+                                    color: Colors.green[700],
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  'Keto Friendly',
+                                  style: TextStyle(
+                                    color: Colors.blue[700],
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Title
+                          Text(
+                            recipeData.name ?? '',
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Info Row
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.access_time,
+                                size: 16,
+                                color: Colors.grey[600],
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${recipeData.cookingTime} min',
+                                style: TextStyle(
+                                  color: Color(0xff64748B),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Icon(
+                                Icons.restaurant,
+                                size: 16,
+                                color: Color(0xff64748B),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '1 Serving',
+                                style: TextStyle(
+                                  color: Color(0xff64748B),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+
+                          // Nutrition Info
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              nutrition(
+                                "Calories",
+                                recipeData.calories ?? 0,
+                                "Kcal",
+                                Colors.black,
+                              ),
+                              nutrition(
+                                "Protein",
+                                recipeData.macros?.protein ?? 0,
+                                "Grams",
+                                Color(0xff37EC13),
+                              ),
+                              nutrition(
+                                "Carbs",
+                                recipeData.macros?.carbohydrates ?? 0,
+                                "Grams",
+                                Color(0xffF59E0B),
+                              ),
+                              nutrition(
+                                "Fats",
+                                recipeData.macros?.fats ?? 0,
+                                "Grams",
+                                Color(0xffF87171),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+
+                          // Description
+                          const Text(
+                            'Description',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            recipeData.description ??
+                                'No description available.',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.grey[700],
+                              height: 1.6,
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+
+                          // Ingredients Header
+                          const Text(
+                            'Ingredients',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Container(
+                            height: 3,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.green[400]!,
+                                  Colors.green[100]!,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Ingredients List
+                          for (
+                            int i = 0;
+                            i < (recipeData.ingredients?.length ?? 0);
+                            i++
+                          )
+                            _buildIngredient(
+                              i,
+                              recipeData.ingredients?[i].name ?? '',
+                              recipeData.ingredients?[i].quantity ?? '',
+                            ),
+
+                          const SizedBox(height: 100),
+                        ],
                       ),
                     ),
                   ],
                 ),
-
-                // Content Section
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Tags
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green[50],
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              'High Protein',
-                              style: TextStyle(
-                                color: Colors.green[700],
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              'Keto Friendly',
-                              style: TextStyle(
-                                color: Colors.blue[700],
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Title
-                      Text(
-                        recipeData.name ?? '',
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Info Row
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.access_time,
-                            size: 16,
-                            color: Colors.grey[600],
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${recipeData.cookingTime} min',
-                            style: TextStyle(
-                              color: Color(0xff64748B),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Icon(
-                            Icons.restaurant,
-                            size: 16,
-                            color: Color(0xff64748B),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '1 Serving',
-                            style: TextStyle(
-                              color: Color(0xff64748B),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 25),
-
-                      // Nutrition Info
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          nutrition(
-                            "Calories",
-                            recipeData.calories ?? 0,
-                            "Kcal",
-                            Colors.black,
-                          ),
-                          nutrition(
-                            "Protein",
-                            recipeData.macros?.protein ?? 0,
-                            "Grams",
-                            Color(0xff37EC13),
-                          ),
-                          nutrition(
-                            "Carbs",
-                            recipeData.macros?.carbohydrates ?? 0,
-                            "Grams",
-                            Color(0xffF59E0B),
-                          ),
-                          nutrition(
-                            "Fats",
-                            recipeData.macros?.fats ?? 0,
-                            "Grams",
-                            Color(0xffF87171),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 25),
-
-                      // Description
-                      const Text(
-                        'Description',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        recipeData.description ?? 'No description available.',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey[700],
-                          height: 1.6,
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Ingredients Header
-                      const Text(
-                        'Ingredients',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Container(
-                        height: 3,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.green[400]!, Colors.green[100]!],
-                          ),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Ingredients List
-                      for (
-                        int i = 0;
-                        i < (recipeData.ingredients?.length ?? 0);
-                        i++
-                      )
-                        _buildIngredient(
-                          i,
-                          recipeData.ingredients?[i].name ?? '',
-                          recipeData.ingredients?[i].quantity ?? '',
-                        ),
-
-                      const SizedBox(height: 20),
-                      Button(
-                        "Lets Cook",
-                        Steps(
-                          foodId: widget.foodId,
-                          token: widget.token,
-                          steps: recipeData.steps ?? [],
-                          name: recipeData.name ?? '',
-                        ),
-                      ),
-                    ],
+              ),
+              // Floating Button at Bottom
+              Positioned(
+                bottom: 20,
+                left: 20,
+                right: 20,
+                child: Button(
+                  "Lets Cook",
+                  Steps(
+                    foodId: widget.foodId,
+                    token: widget.token,
+                    steps: recipeData.steps ?? [],
+                    name: recipeData.name ?? '',
                   ),
                 ),
-              ],
-
-              // Bottom Button Bar
-            ),
+              ),
+            ],
           ),
         );
       },

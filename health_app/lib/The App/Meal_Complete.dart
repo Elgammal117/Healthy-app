@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/Button.dart';
 import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/NutritionCard.dart';
 import 'package:health_app/The%20App/App.dart';
+import 'package:health_app/network/AddMeal.dart';
 import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
 import 'package:health_app/network/recipes_try.dart';
+import 'package:intl/intl.dart';
+import 'dart:ui';
 
 class MealCompletedScreen extends StatefulWidget {
   final String token;
@@ -53,26 +56,6 @@ class _MealCompletedScreenState extends State<MealCompletedScreen> {
         return Scaffold(
           backgroundColor: const Color(0xFFF9FBF7),
 
-          appBar: AppBar(
-            backgroundColor: const Color(0xFFF9FBF7),
-            elevation: 0,
-
-            leading: IconButton(
-              icon: const Icon(Icons.close, color: Colors.black),
-              onPressed: () => Navigator.pop(context),
-            ),
-
-            title: const Text(
-              "Meal Completed",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-
-            centerTitle: true,
-          ),
-
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
 
@@ -80,6 +63,24 @@ class _MealCompletedScreenState extends State<MealCompletedScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.black),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const SizedBox(width: 60),
+
+                    const Text(
+                      "Meal Completed",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
                 // ================= IMAGE CARD =================
                 Container(
                   height: 220,
@@ -209,13 +210,39 @@ class _MealCompletedScreenState extends State<MealCompletedScreen> {
                       ),
                     ),
 
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        final request = AddMealRequest(
+                          recipeId: widget.foodId,
+                          date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                        );
+                        final myrepo = getIt<MyRepo>();
+                        final respons = await myrepo.addMeal(
+                          widget.token,
+                          request,
+                        );
+                        if (respons.success == true) {
+                          showIOSSuccess(context);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Failed to log meal: ${respons.message}',
+                              ),
+                            ),
+                          );
+                        }
+                      } catch (e) {}
+                    },
 
-                    icon: const Icon(color: Colors.black, Icons.bar_chart),
+                    icon: const Icon(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      Icons.bar_chart,
+                    ),
                     label: const Text(
                       "Log to Daily Tracker",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Color.fromARGB(255, 255, 255, 255),
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -223,15 +250,13 @@ class _MealCompletedScreenState extends State<MealCompletedScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
                 // ================= RATING =================
                 const Text(
                   "Rate this Meal",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
-
-                const SizedBox(height: 10),
 
                 Row(
                   children: List.generate(
@@ -253,49 +278,46 @@ class _MealCompletedScreenState extends State<MealCompletedScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
-
                 // ================= ACTIONS =================
-                Row(
-                  children: [
-                    // Upload
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
+                // Row(
+                //   children: [
+                //     // Upload
+                //     Expanded(
+                //       child: OutlinedButton.icon(
+                //         style: OutlinedButton.styleFrom(
+                //           padding: const EdgeInsets.symmetric(vertical: 14),
+                //           shape: RoundedRectangleBorder(
+                //             borderRadius: BorderRadius.circular(16),
+                //           ),
+                //         ),
 
-                        onPressed: () {},
+                //         onPressed: () {},
 
-                        icon: const Icon(Icons.camera_alt_outlined),
-                        label: const Text("Upload Photo"),
-                      ),
-                    ),
+                //         icon: const Icon(Icons.camera_alt_outlined),
+                //         label: const Text("Upload Photo"),
+                //       ),
+                //     ),
 
-                    const SizedBox(width: 12),
+                //     const SizedBox(width: 12),
 
-                    // Share
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
+                //     // Share
+                //     Expanded(
+                //       child: OutlinedButton.icon(
+                //         style: OutlinedButton.styleFrom(
+                //           padding: const EdgeInsets.symmetric(vertical: 14),
+                //           shape: RoundedRectangleBorder(
+                //             borderRadius: BorderRadius.circular(16),
+                //           ),
+                //         ),
 
-                        onPressed: () {},
+                //         onPressed: () {},
 
-                        icon: const Icon(Icons.group),
-                        label: const Text("Share with Friends"),
-                      ),
-                    ),
-                  ],
-                ),
-
+                //         icon: const Icon(Icons.group),
+                //         label: const Text("Share with Friends"),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 const SizedBox(height: 20),
                 Button("Home", App(token: widget.token)),
               ],
@@ -305,6 +327,78 @@ class _MealCompletedScreenState extends State<MealCompletedScreen> {
       },
     );
   }
+}
+
+void showIOSSuccess(BuildContext context) {
+  final overlay = Overlay.of(context);
+
+  late OverlayEntry overlayEntry;
+
+  overlayEntry = OverlayEntry(
+    builder: (context) {
+      return Center(
+        child: Material(
+          color: Colors.transparent,
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: 1),
+            duration: Duration(milliseconds: 250),
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: Transform.scale(
+                  scale: 0.9 + (value * 0.1),
+                  child: child,
+                ),
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 25),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.95),
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 🔄 Spinner (loading style)
+                  SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: Icon(Icons.check, color: Colors.green, size: 50),
+                  ),
+
+                  SizedBox(height: 15),
+
+                  Text(
+                    "Meal Logged \n Successfully!",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  overlay.insert(overlayEntry);
+
+  // ⏱️ Remove after 1 second
+  Future.delayed(Duration(milliseconds: 2500), () {
+    overlayEntry.remove();
+  });
 }
 
 // ================= CARD =================

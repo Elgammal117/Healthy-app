@@ -32,23 +32,10 @@ class _DiscoverState extends State<Discover> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Filtered Results',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-      ),
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Search and Filter Section
             Container(
@@ -56,6 +43,17 @@ class _DiscoverState extends State<Discover> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
                 children: [
+                  Center(
+                    child: Text(
+                      'Filtered Results',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
                   // Search Bar
                   Container(
                     decoration: BoxDecoration(

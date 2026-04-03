@@ -256,20 +256,13 @@ class _Home_PageState extends State<Login> {
                                         App(token: response.token!),
                                   ),
                                 );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      response.message ?? 'Login failed',
-                                    ),
-                                  ),
-                                );
                               }
                             } catch (e) {
+                              print(e.toString());
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   backgroundColor: Colors.red,
-                                  content: Text('Error occurred during login'),
+                                  content: Text(e.toString()),
                                 ),
                               );
                             } finally {
@@ -303,18 +296,28 @@ class _Home_PageState extends State<Login> {
                 SizedBox(height: 80),
                 Row(
                   children: [
-                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                    Expanded(
+                      child: Divider(
+                        thickness: 1,
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
                         "or sign in with",
                         style: TextStyle(
-                          color: Color(0xff9CA3AF),
+                          color: Color.fromARGB(255, 255, 255, 255),
                           fontSize: 14,
                         ),
                       ),
                     ),
-                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                    Expanded(
+                      child: Divider(
+                        thickness: 1,
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 20),
@@ -338,8 +341,8 @@ class _Home_PageState extends State<Login> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                height: 20,
-                                width: 20,
+                                height: 30,
+                                width: 30,
                                 child: Image.asset("assets/Google.png"),
                               ),
                               SizedBox(width: 10),
@@ -373,8 +376,8 @@ class _Home_PageState extends State<Login> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                height: 20,
-                                width: 20,
+                                height: 35,
+                                width: 35,
                                 child: Image.asset("assets/Facebook.png"),
                               ),
                               SizedBox(width: 10),
