@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:health_app/auth/Login.dart';
 import 'package:health_app/auth/Verification.dart';
@@ -252,17 +254,12 @@ class _SignupPageState extends State<SignupPage> {
                             final response = await myRepo.signUp(request);
 
                             if (response.success == true) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: Colors.green,
-                                  content: Text('Account created successfully'),
-                                ),
-                              );
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => Verification(
                                     email: response.email ?? email ?? '',
+                                    password: password ?? '',
                                     signUpRequest: request,
                                   ),
                                 ),

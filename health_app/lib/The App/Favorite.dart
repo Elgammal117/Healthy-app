@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/FoodCard.dart';
+import 'package:health_app/Hankasha/FoodCard.dart';
 import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

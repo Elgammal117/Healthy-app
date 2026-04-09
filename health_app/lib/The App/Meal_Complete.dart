@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/Button.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/NutritionCard.dart';
+import 'package:health_app/Hankasha/Button.dart';
+import 'package:health_app/Hankasha/NutritionCard.dart';
 import 'package:health_app/The%20App/App.dart';
 import 'package:health_app/network/AddMeal.dart';
 import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:intl/intl.dart';
-import 'dart:ui';
 
 class MealCompletedScreen extends StatefulWidget {
   final String token;

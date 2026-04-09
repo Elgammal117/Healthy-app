@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/MealTag.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/macroBar.dart';
+import 'package:health_app/Hankasha/MealTag.dart';
+import 'package:health_app/Hankasha/macroBar.dart';
 import 'package:health_app/network/injection.dart';
 import 'package:health_app/network/my_repo.dart';
 import 'package:health_app/network/Getmealbydate.dart' hide Image;
@@ -109,6 +109,9 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SizedBox(
           child: ListView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             children: [
               TableCalendar(
                 firstDay: DateTime(2020, 1, 1),
@@ -302,7 +305,7 @@ class _HomePageState extends State<HomePage> {
                     isFavorite: false,
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),

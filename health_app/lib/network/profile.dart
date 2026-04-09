@@ -1,4 +1,4 @@
-library profile_model;
+library;
 
 import 'package:json_annotation/json_annotation.dart';
 

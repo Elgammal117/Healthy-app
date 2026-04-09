@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
-  const Button(this.text, this.page);
+  const Button(this.text, this.page, {super.key});
   final String text;
   final Widget page;
   @override

@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/FoodCard.dart';
-import 'package:health_app/%D8%AD%D9%86%D9%83%D8%B4%D9%87/filter_bottom_sheet.dart';
+import 'package:health_app/Hankasha/FoodCard.dart';
+import 'package:health_app/Hankasha/filter_bottom_sheet.dart';
 import 'package:health_app/network/my_repo.dart';
 import 'package:health_app/network/recipes_try.dart';
 import 'package:health_app/network/web_services.dart';
 
 class Discover extends StatefulWidget {
-  const Discover({Key? key, this.token}) : super(key: key);
+  const Discover({super.key, this.token});
   final String? token;
 
   @override
@@ -17,7 +17,7 @@ class Discover extends StatefulWidget {
 
 class _DiscoverState extends State<Discover> {
   List<String> activeFilters = ['Under 500 kcal', 'High Protein'];
-  String sortBy = 'Calories Low to High';
+  String sortBy = 'Recently Added';
   int mealCount = 128;
 
   late Future<Recipes> recipesFuture;
@@ -107,31 +107,6 @@ class _DiscoverState extends State<Discover> {
                   const SizedBox(height: 16),
 
                   // Filter Chips
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        _buildFilterChip(
-                          'Under 500 kcal',
-                          Colors.green,
-                          isActive: activeFilters.contains('Under 500 kcal'),
-                        ),
-                        const SizedBox(width: 8),
-                        _buildFilterChip(
-                          'High Protein',
-                          Colors.green,
-                          isActive: activeFilters.contains('High Protein'),
-                        ),
-                        const SizedBox(width: 8),
-                        _buildFilterChip(
-                          'Gluten-Free',
-                          Colors.grey[300]!,
-                          isActive: false,
-                          textColor: Colors.grey[700]!,
-                        ),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 16),
 
                   // Results Count and Sort

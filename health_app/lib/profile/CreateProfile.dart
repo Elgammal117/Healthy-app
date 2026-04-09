@@ -66,7 +66,7 @@ class _CreateProfileState extends State<CreateProfile> {
           gender: userData.gender!,
           activityLevel: userData.activity!,
           goal: userData.goal!,
-          targetLoseKg: userData.targetLoseKG!,
+          targetGainKg: userData.targetGainKG!,
         );
         final createProfileResponse = await myrepo.createProfile(
           token,
@@ -137,7 +137,6 @@ class _CreateProfileState extends State<CreateProfile> {
                 CurrentWeight(userData: userData),
                 GoalWeight(userData: userData),
                 Activity(userData: userData),
-                Plan(userData: userData),
               ],
             ),
           ),
@@ -192,7 +191,7 @@ class UserData {
   }
 
   // Calculate target lose/gain weight
-  int? get targetLoseKG {
+  int? get targetGainKG {
     if (currentWeight == null || goalWeight == null) return null;
     return (currentWeight! - goalWeight!).abs();
   }

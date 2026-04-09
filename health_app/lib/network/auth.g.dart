@@ -147,7 +147,7 @@ CreateProfileReqest _$CreateProfileReqestFromJson(Map<String, dynamic> json) =>
       gender: json['gender'] as String?,
       activityLevel: json['activityLevel'] as String?,
       goal: json['goal'] as String?,
-      targetLoseKg: (json['targetLoseKg'] as num?)?.toInt(),
+      targetGainKg: (json['targetGainKg'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$CreateProfileReqestToJson(
@@ -159,7 +159,7 @@ Map<String, dynamic> _$CreateProfileReqestToJson(
   'gender': instance.gender,
   'activityLevel': instance.activityLevel,
   'goal': instance.goal,
-  'targetLoseKg': instance.targetLoseKg,
+  'targetGainKg': instance.targetGainKg,
 };
 
 CreateProfileRespons _$CreateProfileResponsFromJson(

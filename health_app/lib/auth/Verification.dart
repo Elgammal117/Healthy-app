@@ -15,8 +15,8 @@ class Verification extends StatefulWidget {
 
   const Verification({
     super.key,
-    this.password = '',
-    this.email = 'user@example.com',
+    required this.email,
+    required this.password,
     this.signUpRequest,
   });
 
@@ -121,9 +121,12 @@ class _VerificationState extends State<Verification> {
       if (!mounted) return;
 
       if (response.success == true) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Verification successful!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text('Verification successful!'),
+          ),
+        );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

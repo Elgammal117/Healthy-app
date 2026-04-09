@@ -173,7 +173,7 @@ class CreateProfileReqest {
   String? gender;
   String? activityLevel;
   String? goal;
-  int? targetLoseKg;
+  int? targetGainKg;
 
   CreateProfileReqest({
     this.height,
@@ -182,7 +182,7 @@ class CreateProfileReqest {
     this.gender,
     this.activityLevel,
     this.goal,
-    this.targetLoseKg,
+    this.targetGainKg,
   });
 
   factory CreateProfileReqest.fromJson(Map<String, dynamic> json) =>
